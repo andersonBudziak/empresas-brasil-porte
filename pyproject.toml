@@ -1,0 +1,11 @@
+[project]
+name = "empresas-porte"
+version = "0.1.0"
+description = "Abertura e fechamento de empresas no Brasil por porte (MEI, ME, EPP), com fontes do Sebrae"
+requires-python = ">=3.10"
+dependencies = ["pandas>=2.0", "matplotlib>=3.7", "numpy>=1.24"]
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
+testpaths = ["tests", "empresas_porte"]

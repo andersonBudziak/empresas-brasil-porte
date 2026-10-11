@@ -1,0 +1,41 @@
+"""Leitura dos dados e das fontes versionados em `dados/`."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pandas as pd
+
+PASTA_DADOS = Path(__file__).resolve().parent.parent / "dados"
+ARQUIVO_DADOS = PASTA_DADOS / "abertura_fechamento_por_porte.csv"
+ARQUIVO_FONTES = PASTA_DADOS / "fontes.csv"
+
+PORTES = ["MEI", "ME", "EPP"]
+NOMES_PORTE = {
+    "MEI": "Microempreendedor individual (MEI)",
+    "ME": "Microempresa (ME)",
+    "EPP": "Empresa de pequeno porte (EPP)",
+}
+
+
+def carregar_dados(caminho: Path = ARQUIVO_DADOS) -> pd.DataFrame:
+    """Retorna uma linha por ano e porte, com a coluna `saldo` calculada.
+
+    `fechadas` e `saldo` ficam vazios (NA) nos anos em que o fechamento
+    por porte ainda não foi divulgado.
+    """
+    df = pd.read_csv(
+        caminho,
+        dtype={"porte": "string", "fonte_abertas": "string", "fonte_fechadas": "string"},
+    )
+    df["fechadas"] = df["fechadas"].astype("Int64")
+    df["abertas"] = df["abertas"].astype("Int64")
+    df["abertas_aproximado"] = df["abertas_aproximado"].astype(bool)
+    df["saldo"] = df["abertas"] - df["fechadas"]
+    df["porte"] = pd.Categorical(df["porte"], categories=PORTES, ordered=True)
+    return df.sort_values(["porte", "ano"]).reset_index(drop=True)
+
+
+def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> pd.DataFrame:
+    """Retorna a tabela de fontes, indexada pelo `id` usado em `dados`."""
+    return pd.read_csv(caminho).set_index("id")
