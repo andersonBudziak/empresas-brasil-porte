@@ -5,9 +5,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from empresas_porte.dados import PORTES, carregar_dados, carregar_fontes
+from empresas_porte.dados import PORTES, carregar_dados, carregar_fontes, carregar_todas_empresas
 from empresas_porte.formatacao import formatar_numero
-from empresas_porte.grafico import gerar_grafico
+from empresas_porte.grafico import gerar_grafico, gerar_grafico_total
 
 
 def gerar_tabela_markdown(destino: Path) -> Path:
@@ -15,6 +15,7 @@ def gerar_tabela_markdown(destino: Path) -> Path:
     dados = carregar_dados()
     fontes = carregar_fontes()
     linhas = [
+        "## Por porte (Sebrae)", "",
         "| Ano | Porte | Abertas | Fechadas | Saldo |",
         "|---:|:---|---:|---:|---:|",
     ]
@@ -24,6 +25,13 @@ def gerar_tabela_markdown(destino: Path) -> Path:
             else formatar_numero(int(r["fechadas"]))
         saldo = "—" if str(r["saldo"]) == "<NA>" else formatar_numero(int(r["saldo"]))
         linhas.append(f"| {r['ano']} | {r['porte']} | {abertas} | {fechadas} | {saldo} |")
+
+    todas = carregar_todas_empresas()
+    linhas += ["", "## Todas as empresas (Mapa de Empresas)", "",
+               "| Ano | Abertas | Fechadas | Saldo | Fonte |", "|---:|---:|---:|---:|:---|"]
+    for _, r in todas.iterrows():
+        linhas.append(f"| {r['ano']} | {formatar_numero(r['abertas'])} | "
+                      f"{formatar_numero(r['fechadas'])} | {formatar_numero(r['saldo'])} | `{r['fonte']}` |")
 
     linhas += ["", "Fontes:", ""]
     for id_fonte, f in fontes.iterrows():
@@ -45,6 +53,7 @@ def main() -> None:
     dados = carregar_dados()
     assert set(dados["porte"].unique()) == set(PORTES)
     arquivos = gerar_grafico(dados, args.saida)
+    arquivos += gerar_grafico_total(carregar_todas_empresas(), args.saida)
     arquivos.append(gerar_tabela_markdown(args.saida))
     for a in arquivos:
         print(f"gerado: {a}")

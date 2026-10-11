@@ -9,6 +9,7 @@ import pandas as pd
 PASTA_DADOS = Path(__file__).resolve().parent.parent / "dados"
 ARQUIVO_DADOS = PASTA_DADOS / "abertura_fechamento_por_porte.csv"
 ARQUIVO_FONTES = PASTA_DADOS / "fontes.csv"
+ARQUIVO_TODAS = PASTA_DADOS / "todas_empresas.csv"
 
 PORTES = ["MEI", "ME", "EPP"]
 NOMES_PORTE = {
@@ -39,3 +40,10 @@ def carregar_dados(caminho: Path = ARQUIVO_DADOS) -> pd.DataFrame:
 def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> pd.DataFrame:
     """Retorna a tabela de fontes, indexada pelo `id` usado em `dados`."""
     return pd.read_csv(caminho).set_index("id")
+
+
+def carregar_todas_empresas(caminho: Path = ARQUIVO_TODAS) -> pd.DataFrame:
+    """Totais anuais de todas as empresas (todos os portes), do Mapa de Empresas."""
+    df = pd.read_csv(caminho, dtype={"fonte": "string"})
+    df["saldo"] = df["abertas"] - df["fechadas"]
+    return df.sort_values("ano").reset_index(drop=True)

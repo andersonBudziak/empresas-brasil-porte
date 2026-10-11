@@ -8,7 +8,9 @@ errado no CSV, a soma deixa de bater e o teste falha.
 import pandas as pd
 import pytest
 
-from empresas_porte import abreviar, carregar_dados, carregar_fontes, formatar_numero
+from empresas_porte import (
+    abreviar, carregar_dados, carregar_fontes, carregar_todas_empresas, formatar_numero,
+)
 
 TOTAL_PN_ABERTAS = {
     2019: 3_100_898, 2020: 3_294_280, 2021: 3_943_584,
@@ -63,3 +65,18 @@ def test_formatacao_brasileira():
     assert abreviar(3_145_705) == "3,15 mi"
     assert abreviar(530_222) == "530 mil"
     assert abreviar(-43_032) == "-43 mil"
+
+
+# Saldos anuais publicados nos boletins do Mapa de Empresas.
+SALDO_TODAS = {
+    2020: 2_315_054, 2021: 2_615_906, 2022: 2_142_300,
+    2023: 1_714_847, 2024: 1_818_713,
+}
+
+
+@pytest.mark.parametrize("ano", sorted(SALDO_TODAS))
+def test_saldo_todas_empresas_bate_com_mapa(ano):
+    todas = carregar_todas_empresas()
+    linha = todas[todas["ano"] == ano].iloc[0]
+    assert int(linha["saldo"]) == SALDO_TODAS[ano]
+    assert linha["fonte"] in set(carregar_fontes().index)

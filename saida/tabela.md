@@ -1,3 +1,5 @@
+## Por porte (Sebrae)
+
 | Ano | Porte | Abertas | Fechadas | Saldo |
 |---:|:---|---:|---:|---:|
 | 2019 | MEI | 2.502.526 | 743.566 | 1.758.960 |
@@ -22,7 +24,22 @@
 | 2025 | ME | 933.092 | não divulgado | — |
 | 2025 | EPP | 209.367 | não divulgado | — |
 
+## Todas as empresas (Mapa de Empresas)
+
+| Ano | Abertas | Fechadas | Saldo | Fonte |
+|---:|---:|---:|---:|:---|
+| 2020 | 3.359.750 | 1.044.696 | 2.315.054 | `mapa_2020` |
+| 2021 | 4.026.776 | 1.410.870 | 2.615.906 | `mapa_2021` |
+| 2022 | 3.838.063 | 1.695.763 | 2.142.300 | `mapa_2022` |
+| 2023 | 3.868.687 | 2.153.840 | 1.714.847 | `mapa_2023` |
+| 2024 | 4.254.903 | 2.436.190 | 1.818.713 | `mapa_2024` |
+
 Fontes:
 
 - `sebrae_2019_2024`: [Relatório Técnico: Análise de Abertura e Fechamento de Empresas por Setor e CNAE no Brasil (2019-2024)](https://sebraepr.com.br/wp-content/uploads/2025/09/PUB_Analise-de-Abertura-e-Fechamento-de-Empresas-por-Setor-e-CNAE-no-Brasil-2019-2024.pdf), Sebrae Nacional, 2025-05-16. Apêndice, Tabela A.1 (p. 35).
 - `sebrae_aberturas_2025`: [Resumo Executivo: Abertura de Pequenos Negócios - Anual 2025](https://datasebrae.com.br/wp-content/uploads/2026/01/13012026_resumo_executivo_aberturas_pn_anual.pdf), Sebrae Nacional, 2026-01-13. Seção 'Análise de 2025' (p. 5).
+- `mapa_2020`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2020](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2020.pdf), Ministério da Economia (Governo Federal), 2021-02. Tabela 26, linha GERAL (total anual).
+- `mapa_2021`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2021](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2021.pdf), Ministério da Economia (Governo Federal), 2022-01. Totais anuais de 2021 (GERAL).
+- `mapa_2022`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2022](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2022.pdf), MDIC (Governo Federal), 2023-01. Totais anuais de 2022.
+- `mapa_2023`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2023](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2023.pdf), MEMP (Governo Federal), 2024-01-26. Totais anuais de 2023.
+- `mapa_2024`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2024 (via Diário do Comércio, que reproduz os totais do boletim)](https://diariodocomercio.com.br/economia/saldo-de-empresas-em-minas-gerais-e-positivo-em-2024/), MEMP (Governo Federal), 2025. Totais anuais de 2024; boletim oficial não acessível no momento da coleta.

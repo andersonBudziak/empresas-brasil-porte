@@ -103,6 +103,77 @@ def _desenhar_porte(
     ax.set_facecolor(FUNDO)
 
 
+def _salvar(fig: plt.Figure, destino: Path, nome: str) -> list[Path]:
+    destino.mkdir(parents=True, exist_ok=True)
+    arquivos = []
+    for ext in ("png", "svg"):
+        caminho = destino / f"{nome}.{ext}"
+        fig.savefig(caminho, dpi=200, facecolor=FUNDO)
+        arquivos.append(caminho)
+    plt.close(fig)
+    return arquivos
+
+
+def gerar_grafico_total(dados: pd.DataFrame, destino: Path) -> list[Path]:
+    """Todas as empresas do país (todos os portes), segundo o Mapa de Empresas."""
+    plt.rcParams.update({"font.family": "DejaVu Sans"})
+    fig = plt.figure(figsize=(11, 6.2), facecolor=FUNDO)
+    ax = fig.add_axes([0.08, 0.17, 0.90, 0.63])
+
+    anos = dados["ano"].to_numpy()
+    x = np.arange(len(anos))
+    abertas = dados["abertas"].to_numpy(dtype=float)
+    fechadas = dados["fechadas"].to_numpy(dtype=float)
+    saldo = dados["saldo"].to_numpy(dtype=float)
+
+    ax.bar(x - LARGURA_BARRA / 2 - 0.01, abertas, LARGURA_BARRA, color=VERDE, zorder=2)
+    ax.bar(x + LARGURA_BARRA / 2 + 0.01, fechadas, LARGURA_BARRA, color=AMARELO, zorder=2)
+    ax.plot(x, saldo, color=AZUL, linewidth=2, linestyle=(0, (4, 3)), marker="o",
+            markersize=5, markeredgecolor=FUNDO, markeredgewidth=1.5, zorder=3)
+
+    topo = abertas.max()
+    for i in range(len(anos)):
+        ax.text(x[i] - LARGURA_BARRA / 2, abertas[i] + topo * 0.02, abreviar(abertas[i]),
+                ha="center", va="bottom", fontsize=8, color=TINTA_SECUNDARIA)
+        ax.text(x[i] + LARGURA_BARRA / 2, fechadas[i] + topo * 0.02, abreviar(fechadas[i]),
+                ha="center", va="bottom", fontsize=8, color=TINTA_SECUNDARIA)
+
+    ax.set_xticks(x, [str(a) for a in anos])
+    ax.set_xlim(-0.6, len(anos) - 0.4)
+    ax.set_ylim(0, topo * 1.12)
+    ax.yaxis.set_major_formatter(FuncFormatter(_eixo_milhar))
+    ax.grid(axis="y", color=GRADE, linewidth=0.8, zorder=0)
+    ax.set_axisbelow(True)
+    for lado in ("top", "right", "left"):
+        ax.spines[lado].set_visible(False)
+    ax.spines["bottom"].set_color("#C3C2B7")
+    ax.tick_params(axis="both", colors=TINTA_SUAVE, labelsize=9, length=0)
+    ax.set_facecolor(FUNDO)
+
+    fig.text(0.08, 0.935, "Todas as empresas: abertas e fechadas no Brasil",
+             fontsize=16, color=TINTA, fontweight="bold")
+    fig.text(0.08, 0.885,
+             f"{anos.min()} a {anos.max()} · todos os portes e classes (MEI, ME, EPP, médias e "
+             "grandes), matrizes e filiais",
+             fontsize=10.5, color=TINTA_SECUNDARIA)
+    legenda = [
+        Patch(facecolor=VERDE, label="Abertas"),
+        Patch(facecolor=AMARELO, label="Fechadas"),
+        Line2D([0], [0], color=AZUL, linewidth=2, linestyle=(0, (4, 3)), marker="o",
+               markersize=5, label="Saldo (abertas − fechadas)"),
+    ]
+    fig.legend(handles=legenda, loc="upper left", bbox_to_anchor=(0.075, 0.865), ncol=3,
+               frameon=False, fontsize=9, labelcolor=TINTA_SECUNDARIA, handlelength=1.6,
+               columnspacing=1.6)
+    fig.text(0.08, 0.04,
+             "Fonte: Mapa de Empresas (Governo Federal), boletins do 3º quadrimestre de cada ano. "
+             "2024: totais do boletim reproduzidos pelo Diário do Comércio.\n"
+             "Metodologia diferente da do Sebrae: os totais não se comparam diretamente com o "
+             "gráfico por porte. 2025 fica de fora: o boletim com o total anual não foi localizado.",
+             fontsize=8, color=TINTA_SUAVE, linespacing=1.5)
+    return _salvar(fig, destino, "todas_empresas_abertas_fechadas")
+
+
 def gerar_grafico(dados: pd.DataFrame, destino: Path) -> list[Path]:
     """Desenha o gráfico e salva em PNG e SVG. Retorna os caminhos gerados."""
     plt.rcParams.update({"font.family": "DejaVu Sans"})
@@ -143,11 +214,4 @@ def gerar_grafico(dados: pd.DataFrame, destino: Path) -> list[Path]:
              "em 3,81 mi; fechamentos de 2025 por porte ainda não divulgados.",
              fontsize=8, color=TINTA_SUAVE, linespacing=1.5)
 
-    destino.mkdir(parents=True, exist_ok=True)
-    arquivos = []
-    for ext in ("png", "svg"):
-        caminho = destino / f"empresas_abertas_fechadas_por_porte.{ext}"
-        fig.savefig(caminho, dpi=200, facecolor=FUNDO)
-        arquivos.append(caminho)
-    plt.close(fig)
-    return arquivos
+    return _salvar(fig, destino, "empresas_abertas_fechadas_por_porte")

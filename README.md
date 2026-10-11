@@ -1,8 +1,16 @@
 # Abertura e fechamento de empresas no Brasil por porte (MEI, ME, EPP)
 
-Série anual de empresas abertas, fechadas e saldo no Brasil, separada por porte, de 2019 a 2025. Os dados estão em CSV versionado, cada número aponta para a publicação de onde saiu e um teste automatizado confere os valores contra os totais publicados.
+Série anual de empresas abertas, fechadas e saldo no Brasil: separada por porte (2019 a 2025) e para todas as empresas do país (2020 a 2024). Os dados estão em CSV versionado, cada número aponta para a publicação de onde saiu e um teste automatizado confere os valores contra os totais publicados.
 
 ![Empresas abertas e fechadas no Brasil, por porte](saida/empresas_abertas_fechadas_por_porte.png)
+
+## Todas as empresas
+
+![Todas as empresas: abertas e fechadas no Brasil](saida/todas_empresas_abertas_fechadas.png)
+
+Totais de todas as classes de empresa (MEI, ME, EPP, médias e grandes), segundo o **Mapa de Empresas** do Governo Federal. Os fechamentos mais que dobraram entre 2020 e 2024 (de 1,04 mi para 2,44 mi), e o saldo caiu de 2,62 mi em 2021 para 1,82 mi em 2024.
+
+**Por que não há um painel só de médias e grandes empresas ("Demais")?** Nenhuma fonte aberta publica aberturas *e* fechamentos dessa classe por ano. O Sebrae exclui as "Demais" do estudo de fechamentos, e o Mapa de Empresas só separa o MEI do resto. Subtrair um do outro não funciona: as metodologias diferem a ponto de a diferença dar negativa nos fechamentos de 2021. A única referência é a de aberturas de 2025 do Sebrae: 5,14 mi empresas no total contra 4,95 mi pequenos negócios, ou seja, cerca de 190 mil médias e grandes.
 
 ## O que os dados mostram
 
@@ -17,10 +25,14 @@ Série anual de empresas abertas, fechadas e saldo no Brasil, separada por porte
 | `sebrae_2019_2024` | Sebrae Nacional, *Relatório Técnico: Análise de Abertura e Fechamento de Empresas por Setor e CNAE no Brasil* (16/05/2025) | Apêndice, Tabela A.1, p. 35 | Cartão CNPJ da Receita Federal, extraído em 07/04/2025 |
 | `sebrae_aberturas_2025` | Sebrae Nacional, *Resumo Executivo: Abertura de Pequenos Negócios – Anual 2025* (13/01/2026) | Seção "Análise de 2025", p. 5 | Cartão CNPJ da Receita Federal, extraído em 07/01/2026 |
 
+| `mapa_2020` a `mapa_2024` | Mapa de Empresas (Governo Federal), boletins do 3º quadrimestre de cada ano | Totais anuais ("GERAL"). 2024 vem de reportagem do Diário do Comércio que reproduz o boletim, porque o PDF oficial não estava acessível | Juntas comerciais e Receita Federal (Redesim) |
+
 Links:
 
 - [Análise de Abertura e Fechamento de Empresas 2019–2024 (PDF)](https://sebraepr.com.br/wp-content/uploads/2025/09/PUB_Analise-de-Abertura-e-Fechamento-de-Empresas-por-Setor-e-CNAE-no-Brasil-2019-2024.pdf)
 - [Abertura de Pequenos Negócios – Anual 2025 (PDF)](https://datasebrae.com.br/wp-content/uploads/2026/01/13012026_resumo_executivo_aberturas_pn_anual.pdf)
+
+- Mapa de Empresas: [2020](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2020.pdf), [2021](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2021.pdf), [2022](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2022.pdf), [2023](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2023.pdf), [2024 (via Diário do Comércio)](https://diariodocomercio.com.br/economia/saldo-de-empresas-em-minas-gerais-e-positivo-em-2024/)
 
 A mesma lista está em [`dados/fontes.csv`](dados/fontes.csv), e cada linha de [`dados/abertura_fechamento_por_porte.csv`](dados/abertura_fechamento_por_porte.csv) indica qual fonte usou para abertas e para fechadas.
 
@@ -37,7 +49,9 @@ A mesma lista está em [`dados/fontes.csv`](dados/fontes.csv), e cada linha de [
 - **2025 está incompleto**: só as aberturas por porte foram publicadas até out/2026. Os fechamentos de 2025 por porte ainda não foram divulgados de forma aberta, por isso não há barra de fechadas nem saldo em 2025.
 - **MEI 2025 é aproximado**: o relatório traz "cerca de 3,81 milhões"; o CSV marca essa linha com `abertas_aproximado = true`.
 - **2025 vem de outra extração da base** (jan/2026, contra abr/2025 da série 2019–2024). Os números de anos anteriores podem mudar um pouco entre extrações, porque baixas e reclassificações são registradas com atraso. Por isso 2025 aparece hachurado no gráfico.
-- Os números não batem com o **Mapa de Empresas** do governo federal, que usa outra metodologia (inclui todos os portes e outras naturezas jurídicas).
+- Os dois gráficos usam fontes diferentes e **não devem ser somados nem subtraídos**: o Mapa de Empresas inclui todos os portes e outras naturezas jurídicas, e conta as baixas de outra forma.
+- O gráfico de todas as empresas começa em 2020: o total exato de fechamentos de 2019 não aparece nos boletins acessados, e o boletim com o total anual de 2025 não foi localizado.
+- **Antes de 2009 não há MEI** (criado pela LC 128/2008) e o Simples Nacional começou em julho de 2007. Uma série por porte desde 2000 só seria possível reconstruindo a base aberta de CNPJ da Receita Federal, com a ressalva de que o porte registrado é o atual, não o da época.
 
 ## Como usar
 
@@ -48,7 +62,7 @@ python -m venv .venv
 source .venv/bin/activate      # no Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-python -m empresas_porte        # gera saida/*.png, saida/*.svg e saida/tabela.md
+python -m empresas_porte        # gera os dois gráficos (PNG e SVG) e saida/tabela.md
 pytest                          # confere os dados contra os totais publicados
 ```
 
@@ -66,14 +80,15 @@ print(abreviar(mei["fechadas"].max()))   # '1,80 mi'
 
 ```
 dados/
-  abertura_fechamento_por_porte.csv   # os números, um por ano e porte
+  abertura_fechamento_por_porte.csv   # os números, um por ano e porte (Sebrae)
+  todas_empresas.csv                  # totais de todas as empresas (Mapa de Empresas)
   fontes.csv                          # de onde saiu cada número
 empresas_porte/
   dados.py                            # leitura e cálculo do saldo
   formatacao.py                       # números no padrão brasileiro (1.234.567, "1,2 mi")
   grafico.py                          # gráfico com as cores da bandeira
   __main__.py                         # linha de comando
-tests/test_dados.py                   # confere somas e saldos com a Tabela A.1 e A.3
+tests/test_dados.py                   # confere somas e saldos com Sebrae e Mapa de Empresas
 saida/                                # gráfico e tabela gerados
 ```
 
