@@ -28,6 +28,16 @@
 
 | Ano | Abertas | Fechadas | Saldo | Fonte |
 |---:|---:|---:|---:|:---|
+| 2010 (aprox.) | 1.410.000 | 230.000 | 1.180.000 | `mapa_2020` |
+| 2011 (aprox.) | 1.580.000 | 230.000 | 1.350.000 | `mapa_2020` |
+| 2012 (aprox.) | 1.660.000 | 250.000 | 1.410.000 | `mapa_2020` |
+| 2013 (aprox.) | 1.870.000 | 420.000 | 1.450.000 | `mapa_2020` |
+| 2014 (aprox.) | 1.900.000 | 520.000 | 1.380.000 | `mapa_2020` |
+| 2015 (aprox.) | 2.020.000 | 1.510.000 | 510.000 | `mapa_2020` |
+| 2016 (aprox.) | 2.050.000 | 890.000 | 1.160.000 | `mapa_2020` |
+| 2017 (aprox.) | 2.270.000 | 970.000 | 1.300.000 | `mapa_2020` |
+| 2018 (aprox.) | 2.630.000 | 2.420.000 | 210.000 | `mapa_2020` |
+| 2019 (aprox.) | 3.168.116 | 1.180.000 | 1.988.116 | `mapa_2020` |
 | 2020 | 3.359.750 | 1.044.696 | 2.315.054 | `mapa_2020` |
 | 2021 | 4.026.776 | 1.410.870 | 2.615.906 | `mapa_2021` |
 | 2022 | 3.838.063 | 1.695.763 | 2.142.300 | `mapa_2022` |
@@ -38,7 +48,7 @@ Fontes:
 
 - `sebrae_2019_2024`: [Relatório Técnico: Análise de Abertura e Fechamento de Empresas por Setor e CNAE no Brasil (2019-2024)](https://sebraepr.com.br/wp-content/uploads/2025/09/PUB_Analise-de-Abertura-e-Fechamento-de-Empresas-por-Setor-e-CNAE-no-Brasil-2019-2024.pdf), Sebrae Nacional, 2025-05-16. Apêndice, Tabela A.1 (p. 35).
 - `sebrae_aberturas_2025`: [Resumo Executivo: Abertura de Pequenos Negócios - Anual 2025](https://datasebrae.com.br/wp-content/uploads/2026/01/13012026_resumo_executivo_aberturas_pn_anual.pdf), Sebrae Nacional, 2026-01-13. Seção 'Análise de 2025' (p. 5).
-- `mapa_2020`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2020](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2020.pdf), Ministério da Economia (Governo Federal), 2021-02. Tabela 26, linha GERAL (total anual).
+- `mapa_2020`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2020](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2020.pdf), Ministério da Economia (Governo Federal), 2021-02. 2020: Tabela 26, linha GERAL. 2010–2019: gráfico 'Histórico de abertura e fechamento de empresas (2010 a 2020)', rótulos em milhões com duas casas (ex.: 1,41Mi). 2019 abertas exato (3.168.116) na apresentação Mapa de Empresas 2020 do Ministério da Economia.
 - `mapa_2021`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2021](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2021.pdf), Ministério da Economia (Governo Federal), 2022-01. Totais anuais de 2021 (GERAL).
 - `mapa_2022`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2022](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2022.pdf), MDIC (Governo Federal), 2023-01. Totais anuais de 2022.
 - `mapa_2023`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2023](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2023.pdf), MEMP (Governo Federal), 2024-01-26. Totais anuais de 2023.

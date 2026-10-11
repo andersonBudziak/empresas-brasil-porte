@@ -80,3 +80,25 @@ def test_saldo_todas_empresas_bate_com_mapa(ano):
     linha = todas[todas["ano"] == ano].iloc[0]
     assert int(linha["saldo"]) == SALDO_TODAS[ano]
     assert linha["fonte"] in set(carregar_fontes().index)
+
+
+def test_serie_longa_comeca_em_2010_e_marca_aproximados():
+    todas = carregar_todas_empresas()
+    assert todas["ano"].min() == 2010
+    antigos = todas[todas["ano"] < 2019]
+    assert antigos["abertas_aproximado"].all() and antigos["fechadas_aproximado"].all()
+    assert not todas[todas["ano"] >= 2020]["fechadas_aproximado"].any()
+
+
+def test_relatorio_html_tem_dados_e_fontes(tmp_path):
+    from empresas_porte.relatorio import gerar_relatorio_html
+
+    caminho = gerar_relatorio_html(
+        carregar_dados(), carregar_todas_empresas(), carregar_fontes(), tmp_path
+    )
+    texto = caminho.read_text(encoding="utf-8")
+    assert '<html lang="pt-BR">' in texto
+    assert "{{" not in texto  # nenhum marcador sem substituir
+    assert "4.254.903" in texto and "3.145.705" in texto
+    for url in carregar_fontes()["url"]:
+        assert url in texto

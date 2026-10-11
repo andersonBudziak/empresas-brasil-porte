@@ -43,7 +43,13 @@ def carregar_fontes(caminho: Path = ARQUIVO_FONTES) -> pd.DataFrame:
 
 
 def carregar_todas_empresas(caminho: Path = ARQUIVO_TODAS) -> pd.DataFrame:
-    """Totais anuais de todas as empresas (todos os portes), do Mapa de Empresas."""
+    """Totais anuais de todas as empresas (todos os portes), do Mapa de Empresas.
+
+    De 2010 a 2019 os valores vêm de um gráfico do boletim com rótulos em milhões
+    e duas casas decimais (precisão de 10 mil); as colunas `*_aproximado` marcam isso.
+    """
     df = pd.read_csv(caminho, dtype={"fonte": "string"})
+    for col in ("abertas_aproximado", "fechadas_aproximado"):
+        df[col] = df[col].astype(bool)
     df["saldo"] = df["abertas"] - df["fechadas"]
     return df.sort_values("ano").reset_index(drop=True)

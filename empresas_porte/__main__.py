@@ -1,4 +1,4 @@
-"""Gera o gráfico e a tabela: `python -m empresas_porte`."""
+"""Gera os gráficos, a tabela e o relatório HTML: `python -m empresas_porte`."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from pathlib import Path
 from empresas_porte.dados import PORTES, carregar_dados, carregar_fontes, carregar_todas_empresas
 from empresas_porte.formatacao import formatar_numero
 from empresas_porte.grafico import gerar_grafico, gerar_grafico_total
+from empresas_porte.relatorio import gerar_relatorio_html
 
 
 def gerar_tabela_markdown(destino: Path) -> Path:
@@ -30,7 +31,8 @@ def gerar_tabela_markdown(destino: Path) -> Path:
     linhas += ["", "## Todas as empresas (Mapa de Empresas)", "",
                "| Ano | Abertas | Fechadas | Saldo | Fonte |", "|---:|---:|---:|---:|:---|"]
     for _, r in todas.iterrows():
-        linhas.append(f"| {r['ano']} | {formatar_numero(r['abertas'])} | "
+        aprox = " (aprox.)" if r["abertas_aproximado"] or r["fechadas_aproximado"] else ""
+        linhas.append(f"| {r['ano']}{aprox} | {formatar_numero(r['abertas'])} | "
                       f"{formatar_numero(r['fechadas'])} | {formatar_numero(r['saldo'])} | `{r['fonte']}` |")
 
     linhas += ["", "Fontes:", ""]
@@ -53,8 +55,10 @@ def main() -> None:
     dados = carregar_dados()
     assert set(dados["porte"].unique()) == set(PORTES)
     arquivos = gerar_grafico(dados, args.saida)
-    arquivos += gerar_grafico_total(carregar_todas_empresas(), args.saida)
+    todas = carregar_todas_empresas()
+    arquivos += gerar_grafico_total(todas, args.saida)
     arquivos.append(gerar_tabela_markdown(args.saida))
+    arquivos.append(gerar_relatorio_html(dados, todas, carregar_fontes(), args.saida))
     for a in arquivos:
         print(f"gerado: {a}")
 

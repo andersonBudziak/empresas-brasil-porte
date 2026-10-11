@@ -1,6 +1,10 @@
 # Abertura e fechamento de empresas no Brasil por porte (MEI, ME, EPP)
 
-Série anual de empresas abertas, fechadas e saldo no Brasil: separada por porte (2019 a 2025) e para todas as empresas do país (2020 a 2024). Os dados estão em CSV versionado, cada número aponta para a publicação de onde saiu e um teste automatizado confere os valores contra os totais publicados.
+Série anual de empresas abertas, fechadas e saldo no Brasil: para todas as empresas do país (2010 a 2024) e separada por porte (2019 a 2025).
+
+**Relatório completo em HTML:** [`saida/relatorio.html`](saida/relatorio.html) junta os dois gráficos (interativos), as tabelas, as fontes e as notas de leitura num único arquivo que abre sem internet. Para vê-lo publicado, ative o GitHub Pages no repositório ou baixe o arquivo e abra no navegador.
+
+Os dados estão em CSV versionado, cada número aponta para a publicação de onde saiu e um teste automatizado confere os valores contra os totais publicados.
 
 ![Empresas abertas e fechadas no Brasil, por porte](saida/empresas_abertas_fechadas_por_porte.png)
 
@@ -8,7 +12,14 @@ Série anual de empresas abertas, fechadas e saldo no Brasil: separada por porte
 
 ![Todas as empresas: abertas e fechadas no Brasil](saida/todas_empresas_abertas_fechadas.png)
 
-Totais de todas as classes de empresa (MEI, ME, EPP, médias e grandes), segundo o **Mapa de Empresas** do Governo Federal. Os fechamentos mais que dobraram entre 2020 e 2024 (de 1,04 mi para 2,44 mi), e o saldo caiu de 2,62 mi em 2021 para 1,82 mi em 2024.
+Totais de todas as classes de empresa (MEI, ME, EPP, médias e grandes), segundo o **Mapa de Empresas** do Governo Federal, de 2010 a 2024. As aberturas triplicaram no período (de 1,41 mi para 4,25 mi). Os fechamentos cresceram ainda mais rápido, de 0,23 mi para 2,44 mi, e o saldo caiu de 2,62 mi em 2021 para 1,82 mi em 2024.
+
+Dois picos de fechamento têm causa administrativa, segundo o próprio boletim:
+
+- **2015**: a LC 147/2014 simplificou a baixa de empresas, e muitas que já não funcionavam foram encerradas formalmente.
+- **2018**: a Resolução CGSIM nº 44/2018 permitiu cancelar em massa MEI inadimplentes.
+
+De 2010 a 2019 os números vêm do histórico publicado no boletim de 2020, com rótulos em milhões e duas casas decimais (precisão de dezenas de milhar). O CSV marca esses anos como aproximados.
 
 **Por que não há um painel só de médias e grandes empresas ("Demais")?** Nenhuma fonte aberta publica aberturas *e* fechamentos dessa classe por ano. O Sebrae exclui as "Demais" do estudo de fechamentos, e o Mapa de Empresas só separa o MEI do resto. Subtrair um do outro não funciona: as metodologias diferem a ponto de a diferença dar negativa nos fechamentos de 2021. A única referência é a de aberturas de 2025 do Sebrae: 5,14 mi empresas no total contra 4,95 mi pequenos negócios, ou seja, cerca de 190 mil médias e grandes.
 
@@ -50,7 +61,7 @@ A mesma lista está em [`dados/fontes.csv`](dados/fontes.csv), e cada linha de [
 - **MEI 2025 é aproximado**: o relatório traz "cerca de 3,81 milhões"; o CSV marca essa linha com `abertas_aproximado = true`.
 - **2025 vem de outra extração da base** (jan/2026, contra abr/2025 da série 2019–2024). Os números de anos anteriores podem mudar um pouco entre extrações, porque baixas e reclassificações são registradas com atraso. Por isso 2025 aparece hachurado no gráfico.
 - Os dois gráficos usam fontes diferentes e **não devem ser somados nem subtraídos**: o Mapa de Empresas inclui todos os portes e outras naturezas jurídicas, e conta as baixas de outra forma.
-- O gráfico de todas as empresas começa em 2020: o total exato de fechamentos de 2019 não aparece nos boletins acessados, e o boletim com o total anual de 2025 não foi localizado.
+- O gráfico de todas as empresas começa em 2010, primeiro ano do histórico do Mapa de Empresas, e termina em 2024: o boletim com o total anual de 2025 não foi localizado.
 - **Antes de 2009 não há MEI** (criado pela LC 128/2008) e o Simples Nacional começou em julho de 2007. Uma série por porte desde 2000 só seria possível reconstruindo a base aberta de CNPJ da Receita Federal, com a ressalva de que o porte registrado é o atual, não o da época.
 
 ## Como usar
@@ -62,7 +73,7 @@ python -m venv .venv
 source .venv/bin/activate      # no Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-python -m empresas_porte        # gera os dois gráficos (PNG e SVG) e saida/tabela.md
+python -m empresas_porte        # gera os gráficos (PNG e SVG), saida/tabela.md e saida/relatorio.html
 pytest                          # confere os dados contra os totais publicados
 ```
 
@@ -86,7 +97,9 @@ dados/
 empresas_porte/
   dados.py                            # leitura e cálculo do saldo
   formatacao.py                       # números no padrão brasileiro (1.234.567, "1,2 mi")
-  grafico.py                          # gráfico com as cores da bandeira
+  grafico.py                          # gráficos estáticos (PNG/SVG) com as cores da bandeira
+  relatorio.py                        # relatório HTML único e interativo
+  vendor/chart.umd.js                 # Chart.js 4.4.1 (MIT), embutido no HTML
   __main__.py                         # linha de comando
 tests/test_dados.py                   # confere somas e saldos com Sebrae e Mapa de Empresas
 saida/                                # gráfico e tabela gerados
@@ -105,4 +118,4 @@ Gerada por `python -m empresas_porte` em [`saida/tabela.md`](saida/tabela.md).
 
 ## Licença
 
-Código sob licença MIT. Os dados são do Sebrae, a partir de dados públicos da Receita Federal; cite as fontes acima ao reutilizá-los.
+Código sob licença MIT. O Chart.js embutido também é MIT (ver `empresas_porte/vendor/CHARTJS_LICENSE.md`). Os dados são do Sebrae, a partir de dados públicos da Receita Federal; cite as fontes acima ao reutilizá-los.
