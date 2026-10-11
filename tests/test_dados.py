@@ -102,3 +102,16 @@ def test_relatorio_html_tem_dados_e_fontes(tmp_path):
     assert "4.254.903" in texto and "3.145.705" in texto
     for url in carregar_fontes()["url"]:
         assert url in texto
+
+
+def test_serie_combinada_usa_total_ate_2018_e_porte_depois():
+    from empresas_porte.combinado import montar_serie
+
+    serie = montar_serie(carregar_dados(), carregar_todas_empresas())
+    i2018, i2024, i2025 = (serie.anos.index(a) for a in (2018, 2024, 2025))
+    assert not serie.tem_porte(i2018)
+    assert serie.abertas_da_barra(i2018) == 2_630_000
+    assert serie.abertas_da_barra(i2024) == TOTAL_PN_ABERTAS[2024]
+    assert serie.fechadas_da_barra(i2024) == TOTAL_PN_FECHADAS[2024]
+    assert serie.fechadas_da_barra(i2025) is None
+    assert serie.porte_aprox[i2025]

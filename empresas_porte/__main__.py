@@ -8,6 +8,7 @@ from pathlib import Path
 from empresas_porte.dados import PORTES, carregar_dados, carregar_fontes, carregar_todas_empresas
 from empresas_porte.formatacao import formatar_numero
 from empresas_porte.grafico import gerar_grafico, gerar_grafico_total
+from empresas_porte.combinado import gerar_grafico_combinado, montar_serie
 from empresas_porte.relatorio import gerar_relatorio_html
 
 
@@ -54,8 +55,9 @@ def main() -> None:
 
     dados = carregar_dados()
     assert set(dados["porte"].unique()) == set(PORTES)
-    arquivos = gerar_grafico(dados, args.saida)
     todas = carregar_todas_empresas()
+    arquivos = gerar_grafico_combinado(montar_serie(dados, todas), args.saida)
+    arquivos += gerar_grafico(dados, args.saida)
     arquivos += gerar_grafico_total(todas, args.saida)
     arquivos.append(gerar_tabela_markdown(args.saida))
     arquivos.append(gerar_relatorio_html(dados, todas, carregar_fontes(), args.saida))

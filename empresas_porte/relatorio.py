@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from empresas_porte.combinado import ANO_PORTE, CINZA_TOTAL, CORES_PORTE, montar_serie
 from empresas_porte.dados import NOMES_PORTE, PORTES
 from empresas_porte.formatacao import abreviar, formatar_numero
 from empresas_porte.grafico import AMARELO, AZUL, EVENTOS, VERDE, VERDE_CLARO
@@ -44,6 +45,27 @@ def _series_porte(dados: pd.DataFrame) -> dict:
             "aprox": d["abertas_aproximado"].tolist(),
         }
     return saida
+
+
+def _serie_combinada(dados: pd.DataFrame, todas: pd.DataFrame) -> dict:
+    serie = montar_serie(dados, todas)
+    n = range(len(serie.anos))
+    return {
+        "anos": serie.anos,
+        "anoPorte": ANO_PORTE,
+        "temPorte": [serie.tem_porte(i) for i in n],
+        "barraAbertas": [serie.abertas_da_barra(i) for i in n],
+        "barraFechadas": [serie.fechadas_da_barra(i) for i in n],
+        "totalAbertas": serie.total_abertas,
+        "totalFechadas": serie.total_fechadas,
+        "totalSaldo": serie.total_saldo,
+        "totalAprox": serie.total_aprox,
+        "porteAbertas": serie.porte_abertas,
+        "porteFechadas": serie.porte_fechadas,
+        "porteAprox": serie.porte_aprox,
+        "nomes": NOMES_PORTE,
+        "cores": {**CORES_PORTE, "total": CINZA_TOTAL},
+    }
 
 
 def _tabela_todas(todas: pd.DataFrame) -> str:
@@ -99,6 +121,7 @@ def gerar_relatorio_html(
     payload = {
         "todas": _serie_todas(todas),
         "porte": _series_porte(dados),
+        "combinado": _serie_combinada(dados, todas),
         "eventos": {str(k): v.replace("\n", " ") for k, v in EVENTOS.items()},
         "cores": {"verde": VERDE, "verdeClaro": VERDE_CLARO, "amarelo": AMARELO, "azul": AZUL},
     }
@@ -168,6 +191,9 @@ h2{font-size:21px;margin:48px 0 4px;font-weight:700}
 .linha{width:18px;height:0;border-top:2px dashed var(--azul);display:inline-block}
 .grafico{position:relative;height:380px}
 .grafico.peq{height:250px}
+.grafico.alto{height:480px}
+.traco{width:16px;height:0;border-top:2.5px solid var(--tinta);display:inline-block}
+.linha.escura{border-top-color:var(--tinta)}
 .grade-porte{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px 32px;margin-top:8px}
 .grade-porte .mei{grid-column:1/-1}
 h3{font-size:15px;margin:0 0 4px;font-weight:600}
@@ -184,9 +210,9 @@ th{color:var(--tinta2);font-weight:600}
 ul.fontes{padding-left:18px;font-size:14px}
 ul.fontes li{margin:6px 0}
 a{color:var(--azul)}
-@media (prefers-color-scheme: dark){a{color:#7FA6E8}.linha{border-top-color:#6E9BE8}}
+@media (prefers-color-scheme: dark){a{color:#7FA6E8}.linha{border-top-color:#6E9BE8}.linha.escura{border-top-color:var(--tinta)}}
 footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid var(--borda);padding-top:16px}
-@media (max-width:600px){h1{font-size:24px}.grafico{height:300px}}
+@media (max-width:600px){h1{font-size:24px}.grafico{height:300px}.grafico.alto{height:420px}}
 </style>
 </head>
 <body>
@@ -202,19 +228,22 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
   <div class="kpi"><div class="rot">MEI nos fechamentos de pequenos negócios</div><div class="val">{{KPI_MEI_PCT}}%</div><div class="det">em 2024, segundo o Sebrae</div></div>
 </section>
 
-<h2>Todas as empresas, {{ANO_INI}} a {{ANO_FIM}}</h2>
-<p class="sub">Todas as classes (MEI, ME, EPP, médias e grandes), matrizes e filiais. Fonte: Mapa de Empresas, Governo Federal.</p>
+<h2>Abertas e fechadas, {{ANO_INI}} a 2025</h2>
+<p class="sub">Abertas acima do eixo, fechadas abaixo. O número sobre cada barra é quantas empresas abriram no ano. Até 2018 só existe o total; de 2019 em diante, o porte aparece empilhado.</p>
 <div class="legenda">
-  <span><i class="q" style="background:var(--verde)"></i>Abertas</span>
-  <span><i class="q" style="background:var(--amarelo)"></i>Fechadas</span>
-  <span><i class="linha"></i>Saldo (abertas − fechadas)</span>
+  <span><i class="q" style="background:#B4B2A9"></i>Todas as empresas (até 2018)</span>
+  <span><i class="q" style="background:var(--verde)"></i>MEI</span>
+  <span><i class="q" style="background:var(--azul)"></i>Microempresa (ME)</span>
+  <span><i class="q" style="background:var(--amarelo)"></i>Pequeno porte (EPP)</span>
+  <span><i class="traco"></i>Total do governo</span>
+  <span><i class="linha escura"></i>Saldo de todas as empresas</span>
 </div>
-<div class="grafico"><canvas id="g-todas" role="img" aria-label="Empresas abertas, fechadas e saldo no Brasil de {{ANO_INI}} a {{ANO_FIM}}"></canvas></div>
+<div class="grafico alto"><canvas id="g-comb" role="img" aria-label="Empresas abertas e fechadas no Brasil de {{ANO_INI}} a 2025, com o porte empilhado a partir de 2019"></canvas></div>
 <ul class="eventos" id="eventos"></ul>
-<p class="nota">De 2010 a 2019 os valores vêm do histórico publicado no boletim de 2020, arredondado em dezenas de milhar. Passe o mouse sobre as barras para ver os números.</p>
+<p class="nota">Até 2018 e no traço preto: Mapa de Empresas (Governo Federal). MEI, ME e EPP: Sebrae, com base no CNPJ da Receita Federal. As fontes têm metodologias diferentes, então a soma dos portes não precisa bater com o traço. De 2010 a 2019 o total está arredondado em dezenas de milhar. Em 2025 só há aberturas, e o MEI é aproximado (*). Passe o mouse sobre as barras para ver os números de cada porte.</p>
 
-<h2>Por porte, 2019 a 2025</h2>
-<p class="sub">Pequenos negócios por porte. Fonte: Sebrae, com base no cadastro de CNPJ da Receita Federal.</p>
+<h2>Detalhe por porte, 2019 a 2025</h2>
+<p class="sub">Cada porte na sua própria escala, para ver a tendência dos menores. Fonte: Sebrae, com base no cadastro de CNPJ da Receita Federal.</p>
 <div class="legenda">
   <span><i class="q" style="background:var(--verde)"></i>Abertas</span>
   <span><i class="q" style="background:#8CCBA4;outline:1px solid var(--verde)"></i>Abertas em 2025 (relatório anual de 2025)</span>
@@ -305,16 +334,111 @@ function conjuntos(abertas, fechadas, saldo, coresAbertas){
   ];
 }
 
-// Todas as empresas
-const T = D.todas;
-new Chart(document.getElementById('g-todas'), {
-  data:{labels:T.anos, datasets:conjuntos(T.abertas, T.fechadas, T.saldo, C.verde)},
-  options:opcoes(c => {
-    const i = c.dataIndex;
-    const aprox = (c.datasetIndex === 0 && T.aprox_abertas[i]) || (c.datasetIndex === 1 && T.aprox_fechadas[i])
-               || (c.datasetIndex === 2 && (T.aprox_abertas[i] || T.aprox_fechadas[i]));
-    return aprox ? ' (aprox.)' : '';
-  }, true)
+// Gráfico combinado: total até 2018, porte empilhado a partir de 2019
+const K = D.combinado;
+const TINTA = escuro ? '#F0EFEC' : '#1B1B1B';
+const PORTES = ['MEI', 'ME', 'EPP'];
+const corPorte = p => p === 'ME' ? C.azul : K.cores[p];
+function apagada(hex){ return hex + '73'; }
+const semFech = K.barraFechadas.map(v => v === null);
+const ds = [];
+ds.push({type:'bar', label:'Todas as empresas', grupo:'abertas', stack:'s', order:3,
+  data:K.totalAbertas.map((v,i) => K.temPorte[i] ? null : v), backgroundColor:K.cores.total});
+PORTES.forEach(p => ds.push({type:'bar', label:p, grupo:'abertas', stack:'s', order:3,
+  data:K.porteAbertas[p], backgroundColor:K.anos.map((_,i) => semFech[i] ? apagada(corPorte(p)) : corPorte(p)),
+  borderColor:escuro?'#161615':'#FCFCFB', borderWidth:{top:1}}));
+ds.push({type:'bar', label:'Todas as empresas', grupo:'fechadas', stack:'s', order:3,
+  data:K.totalFechadas.map((v,i) => K.temPorte[i] || v === null ? null : -v), backgroundColor:K.cores.total});
+PORTES.forEach(p => ds.push({type:'bar', label:p, grupo:'fechadas', stack:'s', order:3,
+  data:K.porteFechadas[p].map(v => v === null ? null : -v), backgroundColor:corPorte(p),
+  borderColor:escuro?'#161615':'#FCFCFB', borderWidth:{bottom:1}}));
+['abertas','fechadas'].forEach(g => ds.push({type:'line', label:'Total do governo', grupo:g, order:1,
+  stack:'marca-' + g,
+  data:K.anos.map((_,i) => {
+    if (!K.temPorte[i]) return null;
+    const v = g === 'abertas' ? K.totalAbertas[i] : K.totalFechadas[i];
+    return v === null ? null : (g === 'abertas' ? v : -v);
+  }),
+  showLine:false, pointStyle:'line', borderWidth:2.5,
+  pointRadius: c => Math.min(15, c.chart.chartArea ? c.chart.chartArea.width / K.anos.length * 0.42 : 15),
+  pointHoverRadius: c => Math.min(15, c.chart.chartArea ? c.chart.chartArea.width / K.anos.length * 0.42 : 15),
+  borderColor:TINTA, backgroundColor:TINTA}));
+ds.push({type:'line', label:'Saldo', grupo:'saldo', stack:'saldo', order:0, data:K.totalSaldo,
+  borderColor:TINTA, backgroundColor:TINTA, borderWidth:2, borderDash:[5,4], pointRadius:3,
+  pointBorderColor:escuro?'#161615':'#FCFCFB', pointBorderWidth:1.2, spanGaps:false, tension:.1});
+
+// Rótulo da barra com duas casas, como no PNG: "3,15 mi", "933 mil".
+function rotuloBarra(v){
+  if (v >= 1e6) return (v/1e6).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' mi';
+  return Math.round(v/1e3).toLocaleString('pt-BR') + ' mil';
+}
+const rotulosAbertas = {
+  id:'rotulosAbertas',
+  afterDatasetsDraw(chart){
+    const {ctx, scales:{x, y}} = chart;
+    const larg = x.width / K.anos.length;
+    const estreito = larg < 44;
+    ctx.save();
+    ctx.fillStyle = TINTA;
+    ctx.font = (estreito ? '10px ' : '12px ') + getComputedStyle(document.body).fontFamily;
+    K.anos.forEach((ano, i) => {
+      const v = K.barraAbertas[i];
+      if (v === null) return;
+      const topo = Math.max(v, K.temPorte[i] && K.totalAbertas[i] ? K.totalAbertas[i] : 0);
+      const px = x.getPixelForValue(i), py = y.getPixelForValue(topo) - 6;
+      const txt = rotuloBarra(v) + (K.porteAprox[i] ? '*' : '');
+      if (estreito) {
+        ctx.save(); ctx.translate(px, py); ctx.rotate(-Math.PI/2);
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, 0, 0);
+        ctx.restore();
+      } else {
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(txt, px, py);
+      }
+    });
+    ctx.restore();
+  }
+};
+const faixaPorte = {
+  id:'faixaPorte',
+  beforeDatasetsDraw(chart){
+    const {ctx, chartArea:a, scales:{x}} = chart;
+    const i0 = K.anos.indexOf(K.anoPorte);
+    const x0 = x.getPixelForValue(i0) - x.width / K.anos.length / 2;
+    ctx.save(); ctx.fillStyle = escuro ? 'rgba(255,255,255,.04)' : '#EEF0EA';
+    ctx.fillRect(x0, a.top, a.right - x0, a.bottom - a.top); ctx.restore();
+  }
+};
+new Chart(document.getElementById('g-comb'), {
+  data:{labels:K.anos, datasets:ds},
+  plugins:[faixaPorte, rotulosAbertas],
+  options:{
+    responsive:true, maintainAspectRatio:false, layout:{padding:{top: innerWidth < 600 ? 62 : 38}},
+    interaction:{mode:'index', intersect:false},
+    plugins:{legend:{display:false}, tooltip:{
+      filter: it => it.raw !== null && it.raw !== undefined,
+      itemSort: (a, b) => a.datasetIndex - b.datasetIndex,
+      callbacks:{
+        title: it => 'Ano ' + it[0].label,
+        label: c => {
+          const d = c.dataset, i = c.dataIndex, v = Math.abs(c.raw);
+          if (d.grupo === 'saldo') return ' Saldo de todas as empresas: ' + fmt.format(c.raw) + (K.totalAprox[i] ? ' (aprox.)' : '');
+          const nome = d.label === 'Total do governo' ? 'Total do governo' : (K.nomes[d.label] || d.label);
+          const aprox = (d.label === 'MEI' && d.grupo === 'abertas' && K.porteAprox[i]) ||
+                        (d.label === 'Todas as empresas' && K.totalAprox[i]);
+          return ' ' + (d.grupo === 'abertas' ? 'Abertas' : 'Fechadas') + ' · ' + nome + ': ' + fmt.format(v) + (aprox ? ' (aprox.)' : '');
+        },
+        footer: it => {
+          const i = it[0].dataIndex;
+          return K.temPorte[i] && K.barraFechadas[i] === null ? 'Fechamentos por porte ainda não divulgados' : '';
+        }
+      }
+    }},
+    scales:{
+      x:{stacked:true, grid:{display:false}, ticks:{color:TICK, autoSkip:true, maxRotation:0}},
+      y:{stacked:true, grid:{color:c => c.tick.value === 0 ? (escuro ? '#5a5955' : '#8a8880') : GRADE},
+         border:{display:false}, ticks:{color:TICK, callback:v => curto(Math.abs(v))}}
+    }
+  }
 });
 const ul = document.getElementById('eventos');
 Object.entries(D.eventos).forEach(([ano, txt]) => {

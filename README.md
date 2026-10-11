@@ -2,11 +2,15 @@
 
 Série anual de empresas abertas, fechadas e saldo no Brasil: para todas as empresas do país (2010 a 2024) e separada por porte (2019 a 2025).
 
-**Relatório completo em HTML:** [`saida/relatorio.html`](saida/relatorio.html) junta os dois gráficos (interativos), as tabelas, as fontes e as notas de leitura num único arquivo que abre sem internet. Para vê-lo publicado, ative o GitHub Pages no repositório ou baixe o arquivo e abra no navegador.
+**Relatório completo em HTML:** [`saida/relatorio.html`](saida/relatorio.html) junta os gráficos (interativos), as tabelas, as fontes e as notas de leitura num único arquivo que abre sem internet. Para vê-lo publicado, ative o GitHub Pages no repositório ou baixe o arquivo e abra no navegador.
 
 Os dados estão em CSV versionado, cada número aponta para a publicação de onde saiu e um teste automatizado confere os valores contra os totais publicados.
 
-![Empresas abertas e fechadas no Brasil, por porte](saida/empresas_abertas_fechadas_por_porte.png)
+## Gráfico principal: tudo junto
+
+![Empresas abertas e fechadas no Brasil, por porte](saida/empresas_abertas_fechadas_combinado.png)
+
+Abertas acima do eixo e fechadas abaixo, de 2010 a 2025, com o número de empresas abertas sobre cada barra. Até 2018 só existe o total do Mapa de Empresas (cinza). De 2019 em diante, as barras mostram MEI, ME e EPP empilhados (Sebrae), e um traço preto marca o total do Mapa de Empresas no mesmo ano. Como as fontes têm metodologias diferentes, a soma dos portes fica um pouco abaixo do traço (cerca de 2% nas aberturas). Em 2025 só há aberturas.
 
 ## Todas as empresas
 
@@ -22,6 +26,12 @@ Dois picos de fechamento têm causa administrativa, segundo o próprio boletim:
 De 2010 a 2019 os números vêm do histórico publicado no boletim de 2020, com rótulos em milhões e duas casas decimais (precisão de dezenas de milhar). O CSV marca esses anos como aproximados.
 
 **Por que não há um painel só de médias e grandes empresas ("Demais")?** Nenhuma fonte aberta publica aberturas *e* fechamentos dessa classe por ano. O Sebrae exclui as "Demais" do estudo de fechamentos, e o Mapa de Empresas só separa o MEI do resto. Subtrair um do outro não funciona: as metodologias diferem a ponto de a diferença dar negativa nos fechamentos de 2021. A única referência é a de aberturas de 2025 do Sebrae: 5,14 mi empresas no total contra 4,95 mi pequenos negócios, ou seja, cerca de 190 mil médias e grandes.
+
+## Detalhe por porte
+
+Cada porte na sua própria escala, para ver a tendência dos menores, que no gráfico principal ficam finos.
+
+![Detalhe por porte](saida/empresas_abertas_fechadas_por_porte.png)
 
 ## O que os dados mostram
 
@@ -97,6 +107,7 @@ dados/
 empresas_porte/
   dados.py                            # leitura e cálculo do saldo
   formatacao.py                       # números no padrão brasileiro (1.234.567, "1,2 mi")
+  combinado.py                        # gráfico principal: total desde 2010 + porte empilhado
   grafico.py                          # gráficos estáticos (PNG/SVG) com as cores da bandeira
   relatorio.py                        # relatório HTML único e interativo
   vendor/chart.umd.js                 # Chart.js 4.4.1 (MIT), embutido no HTML
