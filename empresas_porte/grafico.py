@@ -187,7 +187,7 @@ def gerar_grafico_total(dados: pd.DataFrame, destino: Path) -> list[Path]:
     fig.text(0.07, 0.035,
              "Fonte: Mapa de Empresas (Governo Federal). 2010–2019: histórico publicado no boletim do "
              "3º quadrimestre de 2020, arredondado em dezenas de milhar.\n"
-             "2020–2024: boletins do 3º quadrimestre de cada ano (2024 via Diário do Comércio). "
+             "2020–2024: boletins do 3º quadrimestre de cada ano. "
              "Metodologia diferente da do Sebrae; não somar com o gráfico por porte.",
              fontsize=8, color=TINTA_SUAVE, linespacing=1.5)
     return _salvar(fig, destino, "todas_empresas_abertas_fechadas")

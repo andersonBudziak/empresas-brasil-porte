@@ -2,3 +2,4 @@ pandas>=2.0
 matplotlib>=3.7
 numpy>=1.24
 pytest>=7.0
+duckdb>=1.0  # só para processar a base de CNPJ da Receita (empresas_porte.receita)
