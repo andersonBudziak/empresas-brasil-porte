@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 
 from empresas_porte.combinado import ANO_PORTE, CINZA_TOTAL, CORES_PORTE, montar_serie
-from empresas_porte.dados import NOMES_PORTE, PORTES
+from empresas_porte.dados import NOMES_PORTE, PORTES, rotulo_ano
 from empresas_porte.formatacao import abreviar, formatar_numero
 from empresas_porte.grafico import AMARELO, AZUL, EVENTOS, VERDE, VERDE_CLARO
 
@@ -43,6 +43,8 @@ def _series_porte(dados: pd.DataFrame) -> dict:
             "fechadas": [_int_ou_none(v) for v in d["fechadas"]],
             "saldo": [_int_ou_none(v) for v in d["saldo"]],
             "aprox": d["abertas_aproximado"].tolist(),
+            "rotulos": [rotulo_ano(int(a), per).split("\n") for a, per in zip(d["ano"], d["periodo"])],
+            "parcial": d["parcial"].tolist(),
         }
     return saida
 
@@ -63,6 +65,8 @@ def _serie_combinada(dados: pd.DataFrame, todas: pd.DataFrame) -> dict:
         "porteAbertas": serie.porte_abertas,
         "porteFechadas": serie.porte_fechadas,
         "porteAprox": serie.porte_aprox,
+        "parcial": [serie.parcial(i) for i in n],
+        "rotulos": [r.split("\n") for r in serie.rotulos()],
         "nomes": NOMES_PORTE,
         "cores": {**CORES_PORTE, "total": CINZA_TOTAL},
     }
@@ -86,11 +90,11 @@ def _tabela_porte(dados: pd.DataFrame) -> str:
     for _, r in dados.sort_values(["ano", "porte"]).iterrows():
         abertas = formatar_numero(r["abertas"])
         if r["abertas_aproximado"]:
-            abertas += ' <span class="aprox">aprox.</span>'
+            abertas += f' <span class="aprox">{"estimado" if r["parcial"] else "aprox."}</span>'
         fechadas = "não divulgado" if pd.isna(r["fechadas"]) else formatar_numero(int(r["fechadas"]))
         saldo = "—" if pd.isna(r["saldo"]) else formatar_numero(int(r["saldo"]))
         linhas.append(
-            f"<tr><td>{r['ano']}</td><td>{r['porte']}</td><td>{abertas}</td>"
+            f"<tr><td>{rotulo_ano(int(r['ano']), r['periodo'], ' ')}</td><td>{r['porte']}</td><td>{abertas}</td>"
             f"<td>{fechadas}</td><td>{saldo}</td></tr>"
         )
     return "\n".join(linhas)
@@ -131,6 +135,8 @@ def gerar_relatorio_html(
         "{{DADOS_JSON}}": json.dumps(payload, ensure_ascii=False),
         "{{ANO_FIM}}": str(int(ultimo["ano"])),
         "{{ANO_INI}}": str(int(todas["ano"].min())),
+        "{{FIM_PORTE}}": rotulo_ano(int(dados["ano"].max()),
+                                    dados.loc[dados["ano"] == dados["ano"].max(), "periodo"].iloc[0], " "),
         "{{KPI_ABERTAS}}": abreviar(ultimo["abertas"]),
         "{{KPI_FECHADAS}}": abreviar(ultimo["fechadas"]),
         "{{KPI_SALDO}}": abreviar(ultimo["saldo"]),
@@ -219,7 +225,7 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
 <div class="faixa" aria-hidden="true"></div>
 <main>
 <h1>Empresas abertas e fechadas no Brasil</h1>
-<p class="sub">Todas as empresas de {{ANO_INI}} a {{ANO_FIM}} e o detalhe por porte (MEI, ME e EPP) de 2019 a 2025.</p>
+<p class="sub">Todas as empresas de {{ANO_INI}} a {{ANO_FIM}} e o detalhe por porte (MEI, ME e EPP) de 2019 a {{FIM_PORTE}}.</p>
 
 <section class="kpis" aria-label="Resumo de {{ANO_FIM}}">
   <div class="kpi"><div class="rot">Empresas abertas em {{ANO_FIM}}</div><div class="val">{{KPI_ABERTAS}}</div><div class="det">todas as classes</div></div>
@@ -228,25 +234,26 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
   <div class="kpi"><div class="rot">MEI nos fechamentos de pequenos negócios</div><div class="val">{{KPI_MEI_PCT}}%</div><div class="det">em 2024, segundo o Sebrae</div></div>
 </section>
 
-<h2>Abertas e fechadas, {{ANO_INI}} a 2025</h2>
+<h2>Abertas e fechadas, {{ANO_INI}} a {{FIM_PORTE}}</h2>
 <p class="sub">Abertas acima do eixo, fechadas abaixo. O número sobre cada barra é quantas empresas abriram no ano. Até 2018 só existe o total; de 2019 em diante, o porte aparece empilhado.</p>
 <div class="legenda">
   <span><i class="q" style="background:#B4B2A9"></i>Todas as empresas (até 2018)</span>
   <span><i class="q" style="background:var(--verde)"></i>MEI</span>
   <span><i class="q" style="background:var(--azul)"></i>Microempresa (ME)</span>
   <span><i class="q" style="background:var(--amarelo)"></i>Pequeno porte (EPP)</span>
+  <span><i class="q" style="background:transparent;outline:1.5px dashed var(--tinta2)"></i>Ano parcial (2026, jan–set)</span>
   <span><i class="traco"></i>Total do governo</span>
   <span><i class="linha escura"></i>Saldo de todas as empresas</span>
 </div>
-<div class="grafico alto"><canvas id="g-comb" role="img" aria-label="Empresas abertas e fechadas no Brasil de {{ANO_INI}} a 2025, com o porte empilhado a partir de 2019"></canvas></div>
+<div class="grafico alto"><canvas id="g-comb" role="img" aria-label="Empresas abertas e fechadas no Brasil de {{ANO_INI}} a {{FIM_PORTE}}, com o porte empilhado a partir de 2019"></canvas></div>
 <ul class="eventos" id="eventos"></ul>
-<p class="nota">Até 2018 e no traço preto: Mapa de Empresas (Governo Federal). MEI, ME e EPP: Sebrae, com base no CNPJ da Receita Federal. As fontes têm metodologias diferentes, então a soma dos portes não precisa bater com o traço. De 2010 a 2019 o total está arredondado em dezenas de milhar. Em 2025 só há aberturas, e o MEI é aproximado (*). Passe o mouse sobre as barras para ver os números de cada porte.</p>
+<p class="nota">Até 2018 e no traço preto: Mapa de Empresas (Governo Federal). MEI, ME e EPP: Sebrae, com base no CNPJ da Receita Federal. As fontes têm metodologias diferentes, então a soma dos portes não precisa bater com o traço. De 2010 a 2019 o total está arredondado em dezenas de milhar. Em 2025 só há aberturas, e o MEI é aproximado. Em 2026 há só aberturas de janeiro a setembro (barra tracejada): o total é exato (4.391.539), mas a divisão por porte foi estimada com os percentuais divulgados pelo Sebrae (77% MEI, 19% ME, 4% EPP). O asterisco marca valores aproximados ou estimados. Passe o mouse sobre as barras para ver os números de cada porte.</p>
 
-<h2>Detalhe por porte, 2019 a 2025</h2>
+<h2>Detalhe por porte, 2019 a {{FIM_PORTE}}</h2>
 <p class="sub">Cada porte na sua própria escala, para ver a tendência dos menores. Fonte: Sebrae, com base no cadastro de CNPJ da Receita Federal.</p>
 <div class="legenda">
   <span><i class="q" style="background:var(--verde)"></i>Abertas</span>
-  <span><i class="q" style="background:#8CCBA4;outline:1px solid var(--verde)"></i>Abertas em 2025 (relatório anual de 2025)</span>
+  <span><i class="q" style="background:#8CCBA4;outline:1px solid var(--verde)"></i>Só aberturas (2025 e 2026 jan–set)</span>
   <span><i class="q" style="background:var(--amarelo)"></i>Fechadas</span>
   <span><i class="linha"></i>Saldo</span>
 </div>
@@ -255,7 +262,7 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
   <div><h3 id="t-ME"></h3><div class="grafico peq"><canvas id="g-ME" role="img" aria-label="Microempresas: abertas, fechadas e saldo"></canvas></div></div>
   <div><h3 id="t-EPP"></h3><div class="grafico peq"><canvas id="g-EPP" role="img" aria-label="Empresas de pequeno porte: abertas, fechadas e saldo"></canvas></div></div>
 </div>
-<p class="nota">Os fechamentos de 2025 por porte ainda não foram divulgados. O número de MEI abertos em 2025 é aproximado (3,81 mi). As médias e grandes empresas não têm painel próprio porque nenhuma fonte aberta publica as aberturas e os fechamentos dessa classe ano a ano.</p>
+<p class="nota">Os fechamentos de 2025 e 2026 por porte ainda não foram divulgados. O número de MEI abertos em 2025 é aproximado (3,81 mi), e 2026 vai só de janeiro a setembro, com o porte estimado pelos percentuais do Sebrae. As médias e grandes empresas não têm painel próprio porque nenhuma fonte aberta publica as aberturas e os fechamentos dessa classe ano a ano.</p>
 
 <h2>Tabelas</h2>
 <details open>
@@ -312,7 +319,7 @@ function opcoes(extraTooltip, pularRotulos){
     responsive:true, maintainAspectRatio:false,
     interaction:{mode:'index', intersect:false},
     plugins:{legend:{display:false}, tooltip:{callbacks:{
-      title: it => 'Ano ' + it[0].label,
+      title: it => 'Ano ' + String(it[0].label).replace(',', ' '),
       label: c => {
         if (c.raw === null) return ' ' + c.dataset.label + ': não divulgado';
         return ' ' + c.dataset.label + ': ' + fmt.format(c.raw) + (extraTooltip ? extraTooltip(c) : '');
@@ -347,6 +354,23 @@ ds.push({type:'bar', label:'Todas as empresas', grupo:'abertas', stack:'s', orde
 PORTES.forEach(p => ds.push({type:'bar', label:p, grupo:'abertas', stack:'s', order:3,
   data:K.porteAbertas[p], backgroundColor:K.anos.map((_,i) => semFech[i] ? apagada(corPorte(p)) : corPorte(p)),
   borderColor:escuro?'#161615':'#FCFCFB', borderWidth:{top:1}}));
+// Chart.js não aplica borderDash a barras: desenhamos o contorno tracejado do ano parcial à mão.
+const contornoParcial = {
+  id:'contornoParcial',
+  afterDatasetsDraw(chart){
+    const {ctx, scales:{x, y}} = chart;
+    K.anos.forEach((_, i) => {
+      if (!K.parcial[i]) return;
+      const metas = chart.getSortedVisibleDatasetMetas().filter(m => m.type === 'bar' && m._dataset.grupo === 'abertas');
+      const barras = metas.map(m => m.data[i]).filter(b => b && b.height);
+      if (!barras.length) return;
+      const topo = Math.min(...barras.map(b => b.y)), base = y.getPixelForValue(0);
+      const larg = barras[0].width, x0 = barras[0].x - larg / 2;
+      ctx.save(); ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5;
+      ctx.strokeStyle = TINTA; ctx.strokeRect(x0, topo, larg, base - topo); ctx.restore();
+    });
+  }
+};
 ds.push({type:'bar', label:'Todas as empresas', grupo:'fechadas', stack:'s', order:3,
   data:K.totalFechadas.map((v,i) => K.temPorte[i] || v === null ? null : -v), backgroundColor:K.cores.total});
 PORTES.forEach(p => ds.push({type:'bar', label:p, grupo:'fechadas', stack:'s', order:3,
@@ -409,8 +433,8 @@ const faixaPorte = {
   }
 };
 new Chart(document.getElementById('g-comb'), {
-  data:{labels:K.anos, datasets:ds},
-  plugins:[faixaPorte, rotulosAbertas],
+  data:{labels:K.rotulos, datasets:ds},
+  plugins:[faixaPorte, rotulosAbertas, contornoParcial],
   options:{
     responsive:true, maintainAspectRatio:false, layout:{padding:{top: innerWidth < 600 ? 62 : 38}},
     interaction:{mode:'index', intersect:false},
@@ -418,14 +442,16 @@ new Chart(document.getElementById('g-comb'), {
       filter: it => it.raw !== null && it.raw !== undefined,
       itemSort: (a, b) => a.datasetIndex - b.datasetIndex,
       callbacks:{
-        title: it => 'Ano ' + it[0].label,
+        title: it => 'Ano ' + K.rotulos[it[0].dataIndex].join(' '),
         label: c => {
           const d = c.dataset, i = c.dataIndex, v = Math.abs(c.raw);
           if (d.grupo === 'saldo') return ' Saldo de todas as empresas: ' + fmt.format(c.raw) + (K.totalAprox[i] ? ' (aprox.)' : '');
           const nome = d.label === 'Total do governo' ? 'Total do governo' : (K.nomes[d.label] || d.label);
           const aprox = (d.label === 'MEI' && d.grupo === 'abertas' && K.porteAprox[i]) ||
                         (d.label === 'Todas as empresas' && K.totalAprox[i]);
-          return ' ' + (d.grupo === 'abertas' ? 'Abertas' : 'Fechadas') + ' · ' + nome + ': ' + fmt.format(v) + (aprox ? ' (aprox.)' : '');
+          const estimado = K.parcial[i] && d.grupo === 'abertas' && PORTES.includes(d.label);
+          return ' ' + (d.grupo === 'abertas' ? 'Abertas' : 'Fechadas') + ' · ' + nome + ': ' + fmt.format(v) +
+                 (estimado ? ' (estimado)' : aprox ? ' (aprox.)' : '');
         },
         footer: it => {
           const i = it[0].dataIndex;
@@ -452,8 +478,8 @@ Object.entries(D.porte).forEach(([porte, s]) => {
   document.getElementById('t-' + porte).textContent = s.nome;
   const cores = s.fechadas.map(f => f === null ? C.verdeClaro : C.verde);
   new Chart(document.getElementById('g-' + porte), {
-    data:{labels:s.anos, datasets:conjuntos(s.abertas, s.fechadas, s.saldo, cores)},
-    options:opcoes(c => (c.datasetIndex === 0 && s.aprox[c.dataIndex]) ? ' (aprox.)' : '')
+    data:{labels:s.rotulos, datasets:conjuntos(s.abertas, s.fechadas, s.saldo, cores)},
+    options:opcoes(c => c.datasetIndex !== 0 ? '' : s.parcial[c.dataIndex] ? ' (estimado)' : s.aprox[c.dataIndex] ? ' (aprox.)' : '')
   });
 });
 </script>

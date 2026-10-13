@@ -19,11 +19,19 @@ NOMES_PORTE = {
 }
 
 
+def rotulo_ano(ano: int, periodo: str = "ano", quebra: str = "\n") -> str:
+    """'2025' para anos completos; '2026' + quebra + '(jan–set)' para anos parciais."""
+    if periodo == "ano":
+        return str(ano)
+    return f"{ano}{quebra}({periodo.replace('-', '–')})"
+
+
 def carregar_dados(caminho: Path = ARQUIVO_DADOS) -> pd.DataFrame:
     """Retorna uma linha por ano e porte, com a coluna `saldo` calculada.
 
     `fechadas` e `saldo` ficam vazios (NA) nos anos em que o fechamento
-    por porte ainda não foi divulgado.
+    por porte ainda não foi divulgado. `periodo` é "ano" para anos completos ou o
+    intervalo do ano parcial (ex.: "jan-set").
     """
     df = pd.read_csv(
         caminho,
@@ -32,6 +40,10 @@ def carregar_dados(caminho: Path = ARQUIVO_DADOS) -> pd.DataFrame:
     df["fechadas"] = df["fechadas"].astype("Int64")
     df["abertas"] = df["abertas"].astype("Int64")
     df["abertas_aproximado"] = df["abertas_aproximado"].astype(bool)
+    if "periodo" not in df:
+        df["periodo"] = "ano"
+    df["periodo"] = df["periodo"].fillna("ano").astype(str)
+    df["parcial"] = df["periodo"] != "ano"
     df["saldo"] = df["abertas"] - df["fechadas"]
     df["porte"] = pd.Categorical(df["porte"], categories=PORTES, ordered=True)
     return df.sort_values(["porte", "ano"]).reset_index(drop=True)

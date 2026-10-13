@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from empresas_porte.dados import PORTES, carregar_dados, carregar_fontes, carregar_todas_empresas
+from empresas_porte.dados import (
+    PORTES, carregar_dados, carregar_fontes, carregar_todas_empresas, rotulo_ano,
+)
 from empresas_porte.formatacao import formatar_numero
 from empresas_porte.grafico import gerar_grafico, gerar_grafico_total
 from empresas_porte.combinado import gerar_grafico_combinado, montar_serie
@@ -22,11 +24,13 @@ def gerar_tabela_markdown(destino: Path) -> Path:
         "|---:|:---|---:|---:|---:|",
     ]
     for _, r in dados.sort_values(["ano", "porte"]).iterrows():
-        abertas = formatar_numero(r["abertas"]) + (" (aprox.)" if r["abertas_aproximado"] else "")
+        marca = " (estimado)" if r["parcial"] else " (aprox.)"
+        abertas = formatar_numero(r["abertas"]) + (marca if r["abertas_aproximado"] else "")
         fechadas = "não divulgado" if r["fechadas"] is None or str(r["fechadas"]) == "<NA>" \
             else formatar_numero(int(r["fechadas"]))
         saldo = "—" if str(r["saldo"]) == "<NA>" else formatar_numero(int(r["saldo"]))
-        linhas.append(f"| {r['ano']} | {r['porte']} | {abertas} | {fechadas} | {saldo} |")
+        ano = rotulo_ano(int(r["ano"]), r["periodo"], " ")
+        linhas.append(f"| {ano} | {r['porte']} | {abertas} | {fechadas} | {saldo} |")
 
     todas = carregar_todas_empresas()
     linhas += ["", "## Todas as empresas (Mapa de Empresas)", "",

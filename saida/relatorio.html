@@ -62,7 +62,7 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
 <div class="faixa" aria-hidden="true"></div>
 <main>
 <h1>Empresas abertas e fechadas no Brasil</h1>
-<p class="sub">Todas as empresas de 2010 a 2024 e o detalhe por porte (MEI, ME e EPP) de 2019 a 2025.</p>
+<p class="sub">Todas as empresas de 2010 a 2024 e o detalhe por porte (MEI, ME e EPP) de 2019 a 2026 (jan–set).</p>
 
 <section class="kpis" aria-label="Resumo de 2024">
   <div class="kpi"><div class="rot">Empresas abertas em 2024</div><div class="val">4,25 mi</div><div class="det">todas as classes</div></div>
@@ -71,25 +71,26 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
   <div class="kpi"><div class="rot">MEI nos fechamentos de pequenos negócios</div><div class="val">75%</div><div class="det">em 2024, segundo o Sebrae</div></div>
 </section>
 
-<h2>Abertas e fechadas, 2010 a 2025</h2>
+<h2>Abertas e fechadas, 2010 a 2026 (jan–set)</h2>
 <p class="sub">Abertas acima do eixo, fechadas abaixo. O número sobre cada barra é quantas empresas abriram no ano. Até 2018 só existe o total; de 2019 em diante, o porte aparece empilhado.</p>
 <div class="legenda">
   <span><i class="q" style="background:#B4B2A9"></i>Todas as empresas (até 2018)</span>
   <span><i class="q" style="background:var(--verde)"></i>MEI</span>
   <span><i class="q" style="background:var(--azul)"></i>Microempresa (ME)</span>
   <span><i class="q" style="background:var(--amarelo)"></i>Pequeno porte (EPP)</span>
+  <span><i class="q" style="background:transparent;outline:1.5px dashed var(--tinta2)"></i>Ano parcial (2026, jan–set)</span>
   <span><i class="traco"></i>Total do governo</span>
   <span><i class="linha escura"></i>Saldo de todas as empresas</span>
 </div>
-<div class="grafico alto"><canvas id="g-comb" role="img" aria-label="Empresas abertas e fechadas no Brasil de 2010 a 2025, com o porte empilhado a partir de 2019"></canvas></div>
+<div class="grafico alto"><canvas id="g-comb" role="img" aria-label="Empresas abertas e fechadas no Brasil de 2010 a 2026 (jan–set), com o porte empilhado a partir de 2019"></canvas></div>
 <ul class="eventos" id="eventos"></ul>
-<p class="nota">Até 2018 e no traço preto: Mapa de Empresas (Governo Federal). MEI, ME e EPP: Sebrae, com base no CNPJ da Receita Federal. As fontes têm metodologias diferentes, então a soma dos portes não precisa bater com o traço. De 2010 a 2019 o total está arredondado em dezenas de milhar. Em 2025 só há aberturas, e o MEI é aproximado (*). Passe o mouse sobre as barras para ver os números de cada porte.</p>
+<p class="nota">Até 2018 e no traço preto: Mapa de Empresas (Governo Federal). MEI, ME e EPP: Sebrae, com base no CNPJ da Receita Federal. As fontes têm metodologias diferentes, então a soma dos portes não precisa bater com o traço. De 2010 a 2019 o total está arredondado em dezenas de milhar. Em 2025 só há aberturas, e o MEI é aproximado. Em 2026 há só aberturas de janeiro a setembro (barra tracejada): o total é exato (4.391.539), mas a divisão por porte foi estimada com os percentuais divulgados pelo Sebrae (77% MEI, 19% ME, 4% EPP). O asterisco marca valores aproximados ou estimados. Passe o mouse sobre as barras para ver os números de cada porte.</p>
 
-<h2>Detalhe por porte, 2019 a 2025</h2>
+<h2>Detalhe por porte, 2019 a 2026 (jan–set)</h2>
 <p class="sub">Cada porte na sua própria escala, para ver a tendência dos menores. Fonte: Sebrae, com base no cadastro de CNPJ da Receita Federal.</p>
 <div class="legenda">
   <span><i class="q" style="background:var(--verde)"></i>Abertas</span>
-  <span><i class="q" style="background:#8CCBA4;outline:1px solid var(--verde)"></i>Abertas em 2025 (relatório anual de 2025)</span>
+  <span><i class="q" style="background:#8CCBA4;outline:1px solid var(--verde)"></i>Só aberturas (2025 e 2026 jan–set)</span>
   <span><i class="q" style="background:var(--amarelo)"></i>Fechadas</span>
   <span><i class="linha"></i>Saldo</span>
 </div>
@@ -98,7 +99,7 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
   <div><h3 id="t-ME"></h3><div class="grafico peq"><canvas id="g-ME" role="img" aria-label="Microempresas: abertas, fechadas e saldo"></canvas></div></div>
   <div><h3 id="t-EPP"></h3><div class="grafico peq"><canvas id="g-EPP" role="img" aria-label="Empresas de pequeno porte: abertas, fechadas e saldo"></canvas></div></div>
 </div>
-<p class="nota">Os fechamentos de 2025 por porte ainda não foram divulgados. O número de MEI abertos em 2025 é aproximado (3,81 mi). As médias e grandes empresas não têm painel próprio porque nenhuma fonte aberta publica as aberturas e os fechamentos dessa classe ano a ano.</p>
+<p class="nota">Os fechamentos de 2025 e 2026 por porte ainda não foram divulgados. O número de MEI abertos em 2025 é aproximado (3,81 mi), e 2026 vai só de janeiro a setembro, com o porte estimado pelos percentuais do Sebrae. As médias e grandes empresas não têm painel próprio porque nenhuma fonte aberta publica as aberturas e os fechamentos dessa classe ano a ano.</p>
 
 <h2>Tabelas</h2>
 <details open>
@@ -149,6 +150,9 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
 <tr><td>2025</td><td>MEI</td><td>3.810.000 <span class="aprox">aprox.</span></td><td>não divulgado</td><td>—</td></tr>
 <tr><td>2025</td><td>ME</td><td>933.092</td><td>não divulgado</td><td>—</td></tr>
 <tr><td>2025</td><td>EPP</td><td>209.367</td><td>não divulgado</td><td>—</td></tr>
+<tr><td>2026 (jan–set)</td><td>MEI</td><td>3.381.485 <span class="aprox">estimado</span></td><td>não divulgado</td><td>—</td></tr>
+<tr><td>2026 (jan–set)</td><td>ME</td><td>834.392 <span class="aprox">estimado</span></td><td>não divulgado</td><td>—</td></tr>
+<tr><td>2026 (jan–set)</td><td>EPP</td><td>175.662 <span class="aprox">estimado</span></td><td>não divulgado</td><td>—</td></tr>
 </tbody></table></div>
 </details>
 
@@ -161,6 +165,7 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
 <li><code>mapa_2022</code> · <a href="https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2022.pdf" target="_blank" rel="noopener">Mapa de Empresas: Boletim do 3º quadrimestre de 2022</a>, MDIC (Governo Federal), 2023-01. <span class="muted">Totais anuais de 2022</span></li>
 <li><code>mapa_2023</code> · <a href="https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2023.pdf" target="_blank" rel="noopener">Mapa de Empresas: Boletim do 3º quadrimestre de 2023</a>, MEMP (Governo Federal), 2024-01-26. <span class="muted">Totais anuais de 2023</span></li>
 <li><code>mapa_2024</code> · <a href="https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/boletim-do-mapa-de-empresas-3o-quad-2024.pdf" target="_blank" rel="noopener">Boletim do Mapa de Empresas - 3º Quad 2024</a>, MEMP (Governo Federal), 2025-02-07. <span class="muted">Tabela 27, &#x27;Movimento de registro de empresas nos estados e Distrito Federal no ano de 2024&#x27;, linha GERAL</span></li>
+<li><code>sebrae_aberturas_2026_set</code> · <a href="https://www.contabeis.com.br/noticias/80002/pequenos-negocios-abriram-452-6-mil-empresas-em-setembro/" target="_blank" rel="noopener">Pequenos negócios abriram 452,6 mil empresas em setembro (levantamento do Sebrae divulgado em 07/10/2026)</a>, Sebrae Nacional, via Portal Contábeis, 2026-10-09. <span class="muted">Acumulado jan–set/2026: 4.391.539 pequenos negócios; 77% MEI, 19% ME, 4% EPP. Divisão por porte estimada aplicando esses percentuais ao total</span></li>
 </ul>
 
 <h2>Como ler estes números</h2>
@@ -191,7 +196,7 @@ footer{margin-top:48px;font-size:13px;color:var(--suave);border-top:1px solid va
 //# sourceMappingURL=chart.umd.js.map
 </script>
 <script>
-const D = {"todas": {"anos": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], "abertas": [1410000, 1580000, 1660000, 1870000, 1900000, 2020000, 2050000, 2270000, 2630000, 3168116, 3359750, 4026776, 3838063, 3868687, 4254903], "fechadas": [230000, 230000, 250000, 420000, 520000, 1510000, 890000, 970000, 2420000, 1180000, 1044696, 1410870, 1695763, 2153840, 2436190], "saldo": [1180000, 1350000, 1410000, 1450000, 1380000, 510000, 1160000, 1300000, 210000, 1988116, 2315054, 2615906, 2142300, 1714847, 1818713], "aprox_abertas": [true, true, true, true, true, true, true, true, true, false, false, false, false, false, false], "aprox_fechadas": [true, true, true, true, true, true, true, true, true, true, false, false, false, false, false]}, "porte": {"MEI": {"nome": "Microempreendedor individual (MEI)", "anos": [2019, 2020, 2021, 2022, 2023, 2024, 2025], "abertas": [2502526, 2674606, 3148333, 2934215, 2903160, 3145705, 3810000], "fechadas": [743566, 650828, 983289, 1202791, 1630047, 1800159, null], "saldo": [1758960, 2023778, 2165044, 1731424, 1273113, 1345546, null], "aprox": [false, false, false, false, false, false, true]}, "ME": {"nome": "Microempresa (ME)", "anos": [2019, 2020, 2021, 2022, 2023, 2024, 2025], "abertas": [487190, 504931, 650225, 668198, 714737, 820738, 933092], "fechadas": [372401, 349526, 387006, 420334, 442837, 530222, null], "saldo": [114789, 155405, 263219, 247864, 271900, 290516, null], "aprox": [false, false, false, false, false, false, false]}, "EPP": {"nome": "Empresa de pequeno porte (EPP)", "anos": [2019, 2020, 2021, 2022, 2023, 2024, 2025], "abertas": [111182, 114743, 145026, 149934, 164371, 194202, 209367], "fechadas": [44134, 42698, 47919, 53058, 58233, 65142, null], "saldo": [67048, 72045, 97107, 96876, 106138, 129060, null], "aprox": [false, false, false, false, false, false, false]}}, "combinado": {"anos": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "anoPorte": 2019, "temPorte": [false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true], "barraAbertas": [1410000.0, 1580000.0, 1660000.0, 1870000.0, 1900000.0, 2020000.0, 2050000.0, 2270000.0, 2630000.0, 3100898.0, 3294280.0, 3943584.0, 3752347.0, 3782268.0, 4160645.0, 4952459.0], "barraFechadas": [230000.0, 230000.0, 250000.0, 420000.0, 520000.0, 1510000.0, 890000.0, 970000.0, 2420000.0, 1160101.0, 1043052.0, 1418214.0, 1676183.0, 2131117.0, 2395523.0, null], "totalAbertas": [1410000.0, 1580000.0, 1660000.0, 1870000.0, 1900000.0, 2020000.0, 2050000.0, 2270000.0, 2630000.0, 3168116.0, 3359750.0, 4026776.0, 3838063.0, 3868687.0, 4254903.0, null], "totalFechadas": [230000.0, 230000.0, 250000.0, 420000.0, 520000.0, 1510000.0, 890000.0, 970000.0, 2420000.0, 1180000.0, 1044696.0, 1410870.0, 1695763.0, 2153840.0, 2436190.0, null], "totalSaldo": [1180000.0, 1350000.0, 1410000.0, 1450000.0, 1380000.0, 510000.0, 1160000.0, 1300000.0, 210000.0, 1988116.0, 2315054.0, 2615906.0, 2142300.0, 1714847.0, 1818713.0, null], "totalAprox": [true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false], "porteAbertas": {"MEI": [null, null, null, null, null, null, null, null, null, 2502526.0, 2674606.0, 3148333.0, 2934215.0, 2903160.0, 3145705.0, 3810000.0], "ME": [null, null, null, null, null, null, null, null, null, 487190.0, 504931.0, 650225.0, 668198.0, 714737.0, 820738.0, 933092.0], "EPP": [null, null, null, null, null, null, null, null, null, 111182.0, 114743.0, 145026.0, 149934.0, 164371.0, 194202.0, 209367.0]}, "porteFechadas": {"MEI": [null, null, null, null, null, null, null, null, null, 743566.0, 650828.0, 983289.0, 1202791.0, 1630047.0, 1800159.0, null], "ME": [null, null, null, null, null, null, null, null, null, 372401.0, 349526.0, 387006.0, 420334.0, 442837.0, 530222.0, null], "EPP": [null, null, null, null, null, null, null, null, null, 44134.0, 42698.0, 47919.0, 53058.0, 58233.0, 65142.0, null]}, "porteAprox": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], "nomes": {"MEI": "Microempreendedor individual (MEI)", "ME": "Microempresa (ME)", "EPP": "Empresa de pequeno porte (EPP)"}, "cores": {"MEI": "#00873A", "ME": "#1F4FA3", "EPP": "#E5A800", "total": "#B4B2A9"}}, "eventos": {"2015": "LC 147/2014 simplifica a baixa de empresas", "2018": "Res. CGSIM 44/2018: cancelamento em massa de MEI inadimplentes"}, "cores": {"verde": "#00873A", "verdeClaro": "#8CCBA4", "amarelo": "#E5A800", "azul": "#1F4FA3"}};
+const D = {"todas": {"anos": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], "abertas": [1410000, 1580000, 1660000, 1870000, 1900000, 2020000, 2050000, 2270000, 2630000, 3168116, 3359750, 4026776, 3838063, 3868687, 4254903], "fechadas": [230000, 230000, 250000, 420000, 520000, 1510000, 890000, 970000, 2420000, 1180000, 1044696, 1410870, 1695763, 2153840, 2436190], "saldo": [1180000, 1350000, 1410000, 1450000, 1380000, 510000, 1160000, 1300000, 210000, 1988116, 2315054, 2615906, 2142300, 1714847, 1818713], "aprox_abertas": [true, true, true, true, true, true, true, true, true, false, false, false, false, false, false], "aprox_fechadas": [true, true, true, true, true, true, true, true, true, true, false, false, false, false, false]}, "porte": {"MEI": {"nome": "Microempreendedor individual (MEI)", "anos": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "abertas": [2502526, 2674606, 3148333, 2934215, 2903160, 3145705, 3810000, 3381485], "fechadas": [743566, 650828, 983289, 1202791, 1630047, 1800159, null, null], "saldo": [1758960, 2023778, 2165044, 1731424, 1273113, 1345546, null, null], "aprox": [false, false, false, false, false, false, true, true], "rotulos": [["2019"], ["2020"], ["2021"], ["2022"], ["2023"], ["2024"], ["2025"], ["2026", "(jan–set)"]], "parcial": [false, false, false, false, false, false, false, true]}, "ME": {"nome": "Microempresa (ME)", "anos": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "abertas": [487190, 504931, 650225, 668198, 714737, 820738, 933092, 834392], "fechadas": [372401, 349526, 387006, 420334, 442837, 530222, null, null], "saldo": [114789, 155405, 263219, 247864, 271900, 290516, null, null], "aprox": [false, false, false, false, false, false, false, true], "rotulos": [["2019"], ["2020"], ["2021"], ["2022"], ["2023"], ["2024"], ["2025"], ["2026", "(jan–set)"]], "parcial": [false, false, false, false, false, false, false, true]}, "EPP": {"nome": "Empresa de pequeno porte (EPP)", "anos": [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "abertas": [111182, 114743, 145026, 149934, 164371, 194202, 209367, 175662], "fechadas": [44134, 42698, 47919, 53058, 58233, 65142, null, null], "saldo": [67048, 72045, 97107, 96876, 106138, 129060, null, null], "aprox": [false, false, false, false, false, false, false, true], "rotulos": [["2019"], ["2020"], ["2021"], ["2022"], ["2023"], ["2024"], ["2025"], ["2026", "(jan–set)"]], "parcial": [false, false, false, false, false, false, false, true]}}, "combinado": {"anos": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "anoPorte": 2019, "temPorte": [false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true], "barraAbertas": [1410000.0, 1580000.0, 1660000.0, 1870000.0, 1900000.0, 2020000.0, 2050000.0, 2270000.0, 2630000.0, 3100898.0, 3294280.0, 3943584.0, 3752347.0, 3782268.0, 4160645.0, 4952459.0, 4391539.0], "barraFechadas": [230000.0, 230000.0, 250000.0, 420000.0, 520000.0, 1510000.0, 890000.0, 970000.0, 2420000.0, 1160101.0, 1043052.0, 1418214.0, 1676183.0, 2131117.0, 2395523.0, null, null], "totalAbertas": [1410000.0, 1580000.0, 1660000.0, 1870000.0, 1900000.0, 2020000.0, 2050000.0, 2270000.0, 2630000.0, 3168116.0, 3359750.0, 4026776.0, 3838063.0, 3868687.0, 4254903.0, null, null], "totalFechadas": [230000.0, 230000.0, 250000.0, 420000.0, 520000.0, 1510000.0, 890000.0, 970000.0, 2420000.0, 1180000.0, 1044696.0, 1410870.0, 1695763.0, 2153840.0, 2436190.0, null, null], "totalSaldo": [1180000.0, 1350000.0, 1410000.0, 1450000.0, 1380000.0, 510000.0, 1160000.0, 1300000.0, 210000.0, 1988116.0, 2315054.0, 2615906.0, 2142300.0, 1714847.0, 1818713.0, null, null], "totalAprox": [true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false], "porteAbertas": {"MEI": [null, null, null, null, null, null, null, null, null, 2502526.0, 2674606.0, 3148333.0, 2934215.0, 2903160.0, 3145705.0, 3810000.0, 3381485.0], "ME": [null, null, null, null, null, null, null, null, null, 487190.0, 504931.0, 650225.0, 668198.0, 714737.0, 820738.0, 933092.0, 834392.0], "EPP": [null, null, null, null, null, null, null, null, null, 111182.0, 114743.0, 145026.0, 149934.0, 164371.0, 194202.0, 209367.0, 175662.0]}, "porteFechadas": {"MEI": [null, null, null, null, null, null, null, null, null, 743566.0, 650828.0, 983289.0, 1202791.0, 1630047.0, 1800159.0, null, null], "ME": [null, null, null, null, null, null, null, null, null, 372401.0, 349526.0, 387006.0, 420334.0, 442837.0, 530222.0, null, null], "EPP": [null, null, null, null, null, null, null, null, null, 44134.0, 42698.0, 47919.0, 53058.0, 58233.0, 65142.0, null, null]}, "porteAprox": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true], "parcial": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true], "rotulos": [["2010"], ["2011"], ["2012"], ["2013"], ["2014"], ["2015"], ["2016"], ["2017"], ["2018"], ["2019"], ["2020"], ["2021"], ["2022"], ["2023"], ["2024"], ["2025"], ["2026", "(jan–set)"]], "nomes": {"MEI": "Microempreendedor individual (MEI)", "ME": "Microempresa (ME)", "EPP": "Empresa de pequeno porte (EPP)"}, "cores": {"MEI": "#00873A", "ME": "#1F4FA3", "EPP": "#E5A800", "total": "#B4B2A9"}}, "eventos": {"2015": "LC 147/2014 simplifica a baixa de empresas", "2018": "Res. CGSIM 44/2018: cancelamento em massa de MEI inadimplentes"}, "cores": {"verde": "#00873A", "verdeClaro": "#8CCBA4", "amarelo": "#E5A800", "azul": "#1F4FA3"}};
 const fmt = new Intl.NumberFormat('pt-BR');
 function curto(v){
   if (v === null || v === undefined) return '—';
@@ -209,7 +214,7 @@ function opcoes(extraTooltip, pularRotulos){
     responsive:true, maintainAspectRatio:false,
     interaction:{mode:'index', intersect:false},
     plugins:{legend:{display:false}, tooltip:{callbacks:{
-      title: it => 'Ano ' + it[0].label,
+      title: it => 'Ano ' + String(it[0].label).replace(',', ' '),
       label: c => {
         if (c.raw === null) return ' ' + c.dataset.label + ': não divulgado';
         return ' ' + c.dataset.label + ': ' + fmt.format(c.raw) + (extraTooltip ? extraTooltip(c) : '');
@@ -244,6 +249,23 @@ ds.push({type:'bar', label:'Todas as empresas', grupo:'abertas', stack:'s', orde
 PORTES.forEach(p => ds.push({type:'bar', label:p, grupo:'abertas', stack:'s', order:3,
   data:K.porteAbertas[p], backgroundColor:K.anos.map((_,i) => semFech[i] ? apagada(corPorte(p)) : corPorte(p)),
   borderColor:escuro?'#161615':'#FCFCFB', borderWidth:{top:1}}));
+// Chart.js não aplica borderDash a barras: desenhamos o contorno tracejado do ano parcial à mão.
+const contornoParcial = {
+  id:'contornoParcial',
+  afterDatasetsDraw(chart){
+    const {ctx, scales:{x, y}} = chart;
+    K.anos.forEach((_, i) => {
+      if (!K.parcial[i]) return;
+      const metas = chart.getSortedVisibleDatasetMetas().filter(m => m.type === 'bar' && m._dataset.grupo === 'abertas');
+      const barras = metas.map(m => m.data[i]).filter(b => b && b.height);
+      if (!barras.length) return;
+      const topo = Math.min(...barras.map(b => b.y)), base = y.getPixelForValue(0);
+      const larg = barras[0].width, x0 = barras[0].x - larg / 2;
+      ctx.save(); ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5;
+      ctx.strokeStyle = TINTA; ctx.strokeRect(x0, topo, larg, base - topo); ctx.restore();
+    });
+  }
+};
 ds.push({type:'bar', label:'Todas as empresas', grupo:'fechadas', stack:'s', order:3,
   data:K.totalFechadas.map((v,i) => K.temPorte[i] || v === null ? null : -v), backgroundColor:K.cores.total});
 PORTES.forEach(p => ds.push({type:'bar', label:p, grupo:'fechadas', stack:'s', order:3,
@@ -306,8 +328,8 @@ const faixaPorte = {
   }
 };
 new Chart(document.getElementById('g-comb'), {
-  data:{labels:K.anos, datasets:ds},
-  plugins:[faixaPorte, rotulosAbertas],
+  data:{labels:K.rotulos, datasets:ds},
+  plugins:[faixaPorte, rotulosAbertas, contornoParcial],
   options:{
     responsive:true, maintainAspectRatio:false, layout:{padding:{top: innerWidth < 600 ? 62 : 38}},
     interaction:{mode:'index', intersect:false},
@@ -315,14 +337,16 @@ new Chart(document.getElementById('g-comb'), {
       filter: it => it.raw !== null && it.raw !== undefined,
       itemSort: (a, b) => a.datasetIndex - b.datasetIndex,
       callbacks:{
-        title: it => 'Ano ' + it[0].label,
+        title: it => 'Ano ' + K.rotulos[it[0].dataIndex].join(' '),
         label: c => {
           const d = c.dataset, i = c.dataIndex, v = Math.abs(c.raw);
           if (d.grupo === 'saldo') return ' Saldo de todas as empresas: ' + fmt.format(c.raw) + (K.totalAprox[i] ? ' (aprox.)' : '');
           const nome = d.label === 'Total do governo' ? 'Total do governo' : (K.nomes[d.label] || d.label);
           const aprox = (d.label === 'MEI' && d.grupo === 'abertas' && K.porteAprox[i]) ||
                         (d.label === 'Todas as empresas' && K.totalAprox[i]);
-          return ' ' + (d.grupo === 'abertas' ? 'Abertas' : 'Fechadas') + ' · ' + nome + ': ' + fmt.format(v) + (aprox ? ' (aprox.)' : '');
+          const estimado = K.parcial[i] && d.grupo === 'abertas' && PORTES.includes(d.label);
+          return ' ' + (d.grupo === 'abertas' ? 'Abertas' : 'Fechadas') + ' · ' + nome + ': ' + fmt.format(v) +
+                 (estimado ? ' (estimado)' : aprox ? ' (aprox.)' : '');
         },
         footer: it => {
           const i = it[0].dataIndex;
@@ -349,8 +373,8 @@ Object.entries(D.porte).forEach(([porte, s]) => {
   document.getElementById('t-' + porte).textContent = s.nome;
   const cores = s.fechadas.map(f => f === null ? C.verdeClaro : C.verde);
   new Chart(document.getElementById('g-' + porte), {
-    data:{labels:s.anos, datasets:conjuntos(s.abertas, s.fechadas, s.saldo, cores)},
-    options:opcoes(c => (c.datasetIndex === 0 && s.aprox[c.dataIndex]) ? ' (aprox.)' : '')
+    data:{labels:s.rotulos, datasets:conjuntos(s.abertas, s.fechadas, s.saldo, cores)},
+    options:opcoes(c => c.datasetIndex !== 0 ? '' : s.parcial[c.dataIndex] ? ' (estimado)' : s.aprox[c.dataIndex] ? ' (aprox.)' : '')
   });
 });
 </script>

@@ -115,3 +115,13 @@ def test_serie_combinada_usa_total_ate_2018_e_porte_depois():
     assert serie.fechadas_da_barra(i2024) == TOTAL_PN_FECHADAS[2024]
     assert serie.fechadas_da_barra(i2025) is None
     assert serie.porte_aprox[i2025]
+
+
+def test_2026_parcial_soma_o_total_divulgado():
+    d = carregar_dados()
+    d2026 = d[d["ano"] == 2026]
+    assert set(d2026["periodo"]) == {"jan-set"} and d2026["parcial"].all()
+    assert int(d2026["abertas"].sum()) == 4_391_539  # Sebrae, acumulado jan–set/2026
+    assert d2026["abertas_aproximado"].all()  # porte estimado pelos percentuais
+    assert d2026["fechadas"].isna().all()
+    assert not d[d["ano"] < 2026]["parcial"].any()

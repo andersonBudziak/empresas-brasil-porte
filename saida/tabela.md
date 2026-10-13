@@ -23,6 +23,9 @@
 | 2025 | MEI | 3.810.000 (aprox.) | não divulgado | — |
 | 2025 | ME | 933.092 | não divulgado | — |
 | 2025 | EPP | 209.367 | não divulgado | — |
+| 2026 (jan–set) | MEI | 3.381.485 (estimado) | não divulgado | — |
+| 2026 (jan–set) | ME | 834.392 (estimado) | não divulgado | — |
+| 2026 (jan–set) | EPP | 175.662 (estimado) | não divulgado | — |
 
 ## Todas as empresas (Mapa de Empresas)
 
@@ -53,3 +56,4 @@ Fontes:
 - `mapa_2022`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2022](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2022.pdf), MDIC (Governo Federal), 2023-01. Totais anuais de 2022.
 - `mapa_2023`: [Mapa de Empresas: Boletim do 3º quadrimestre de 2023](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/mapa-de-empresas-boletim-3o-quadrimestre-2023.pdf), MEMP (Governo Federal), 2024-01-26. Totais anuais de 2023.
 - `mapa_2024`: [Boletim do Mapa de Empresas - 3º Quad 2024](https://www.gov.br/empresas-e-negocios/pt-br/mapa-de-empresas/boletins/boletim-do-mapa-de-empresas-3o-quad-2024.pdf), MEMP (Governo Federal), 2025-02-07. Tabela 27, 'Movimento de registro de empresas nos estados e Distrito Federal no ano de 2024', linha GERAL.
+- `sebrae_aberturas_2026_set`: [Pequenos negócios abriram 452,6 mil empresas em setembro (levantamento do Sebrae divulgado em 07/10/2026)](https://www.contabeis.com.br/noticias/80002/pequenos-negocios-abriram-452-6-mil-empresas-em-setembro/), Sebrae Nacional, via Portal Contábeis, 2026-10-09. Acumulado jan–set/2026: 4.391.539 pequenos negócios; 77% MEI, 19% ME, 4% EPP. Divisão por porte estimada aplicando esses percentuais ao total.

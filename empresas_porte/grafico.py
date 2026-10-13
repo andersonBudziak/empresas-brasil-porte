@@ -15,7 +15,7 @@ from matplotlib.patches import Patch  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.ticker import FuncFormatter  # noqa: E402
 
-from empresas_porte.dados import NOMES_PORTE, PORTES  # noqa: E402
+from empresas_porte.dados import NOMES_PORTE, PORTES, rotulo_ano  # noqa: E402
 from empresas_porte.formatacao import abreviar, formatar_numero  # noqa: E402
 
 # Paleta inspirada na bandeira, validada para daltonismo (protan/deutan/tritan).
@@ -83,6 +83,8 @@ def _desenhar_porte(
         ax.text(x[i] - LARGURA_BARRA / 2, abertas[i] + topo * 0.02, abreviar(abertas[i]),
                 ha="center", va="bottom", fontsize=8, color=TINTA_SECUNDARIA)
         if sem_fechamento[i]:
+            if not rotular_fechadas:
+                continue
             ax.text(x[i] + LARGURA_BARRA / 2, topo * 0.02, "não\ndivulgado",
                     ha="center", va="bottom", fontsize=7, color=TINTA_SUAVE, linespacing=1.1)
         elif rotular_fechadas:
@@ -90,7 +92,8 @@ def _desenhar_porte(
                     ha="center", va="bottom", fontsize=8, color=TINTA_SECUNDARIA)
 
     ax.set_title(titulo, loc="left", fontsize=11, color=TINTA, fontweight="bold", pad=8)
-    ax.set_xticks(x, [str(a) for a in anos])
+    periodos = dados_porte["periodo"].tolist() if "periodo" in dados_porte else ["ano"] * len(anos)
+    ax.set_xticks(x, [rotulo_ano(int(a), p) for a, p in zip(anos, periodos)])
     ax.set_ylim(0, topo * 1.14)
     ax.set_xlim(-0.6, len(anos) - 0.3)
     ax.yaxis.set_major_formatter(FuncFormatter(_eixo_milhar))
@@ -198,7 +201,7 @@ def gerar_grafico(dados: pd.DataFrame, destino: Path) -> list[Path]:
     plt.rcParams.update({"font.family": "DejaVu Sans"})
     fig = plt.figure(figsize=(11, 9), facecolor=FUNDO)
     grade = fig.add_gridspec(2, 2, height_ratios=[1.15, 1], hspace=0.38, wspace=0.18,
-                             left=0.07, right=0.98, top=0.83, bottom=0.11)
+                             left=0.07, right=0.98, top=0.83, bottom=0.14)
     eixos = [fig.add_subplot(grade[0, :]), fig.add_subplot(grade[1, 0]), fig.add_subplot(grade[1, 1])]
 
     for ax, porte in zip(eixos, PORTES):
@@ -210,6 +213,8 @@ def gerar_grafico(dados: pd.DataFrame, destino: Path) -> list[Path]:
     fig.text(0.07, 0.962, "Empresas abertas e fechadas no Brasil, por porte",
              fontsize=16, color=TINTA, fontweight="bold")
     ano_ini, ano_fim = int(dados["ano"].min()), int(dados["ano"].max())
+    periodo_fim = dados.loc[dados["ano"] == ano_fim, "periodo"].iloc[0] if "periodo" in dados else "ano"
+    ano_fim = rotulo_ano(ano_fim, periodo_fim, " ")
     fig.text(0.07, 0.933,
              f"{ano_ini} a {ano_fim} · inscrições e baixas de CNPJ (matrizes e filiais)",
              fontsize=10.5, color=TINTA_SECUNDARIA)
@@ -217,7 +222,7 @@ def gerar_grafico(dados: pd.DataFrame, destino: Path) -> list[Path]:
     legenda = [
         Patch(facecolor=VERDE, label="Abertas"),
         Patch(facecolor=VERDE_CLARO, edgecolor=VERDE, hatch="////", linewidth=0,
-              label="Abertas em 2025 (relatório anual de 2025)"),
+              label="Só aberturas (2025 e 2026 jan–set)"),
         Patch(facecolor=AMARELO, label="Fechadas (baixas)"),
         Line2D([0], [0], color=AZUL, linewidth=2, linestyle=(0, (4, 3)), marker="o",
                markersize=5, label="Saldo (abertas − fechadas)"),
@@ -226,11 +231,12 @@ def gerar_grafico(dados: pd.DataFrame, destino: Path) -> list[Path]:
                frameon=False, fontsize=9, labelcolor=TINTA_SECUNDARIA, handlelength=1.6,
                columnspacing=1.6)
 
-    fig.text(0.07, 0.045,
+    fig.text(0.07, 0.02,
              "Fonte: Sebrae, com base no Cartão CNPJ da Receita Federal. 2019–2024: estudo "
              "\"Análise de Abertura e Fechamento de Empresas\" (mai/2025), Tabela A.1.\n"
-             "2025: \"Abertura de Pequenos Negócios – Anual 2025\" (jan/2026); MEI arredondado "
-             "em 3,81 mi; fechamentos de 2025 por porte ainda não divulgados.",
+             "2025: \"Abertura de Pequenos Negócios – Anual 2025\" (jan/2026), MEI arredondado em 3,81 mi.\n"
+             "2026: janeiro a setembro, porte estimado pelos percentuais divulgados pelo Sebrae. "
+             "Fechamentos de 2025 e 2026 por porte ainda não divulgados.",
              fontsize=8, color=TINTA_SUAVE, linespacing=1.5)
 
     return _salvar(fig, destino, "empresas_abertas_fechadas_por_porte")

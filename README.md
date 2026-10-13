@@ -1,6 +1,6 @@
 # Abertura e fechamento de empresas no Brasil por porte (MEI, ME, EPP)
 
-Série anual de empresas abertas, fechadas e saldo no Brasil: para todas as empresas do país (2010 a 2024) e separada por porte (2019 a 2025).
+Série anual de empresas abertas, fechadas e saldo no Brasil: para todas as empresas do país (2010 a 2024) e separada por porte (2019 a 2025, mais 2026 de janeiro a setembro).
 
 **Relatório completo em HTML:** [`saida/relatorio.html`](saida/relatorio.html) junta os gráficos (interativos), as tabelas, as fontes e as notas de leitura num único arquivo que abre sem internet. Para vê-lo publicado, ative o GitHub Pages no repositório ou baixe o arquivo e abra no navegador.
 
@@ -10,7 +10,7 @@ Os dados estão em CSV versionado, cada número aponta para a publicação de on
 
 ![Empresas abertas e fechadas no Brasil, por porte](saida/empresas_abertas_fechadas_combinado.png)
 
-Abertas acima do eixo e fechadas abaixo, de 2010 a 2025, com o número de empresas abertas sobre cada barra. Até 2018 só existe o total do Mapa de Empresas (cinza). De 2019 em diante, as barras mostram MEI, ME e EPP empilhados (Sebrae), e um traço preto marca o total do Mapa de Empresas no mesmo ano. Como as fontes têm metodologias diferentes, a soma dos portes fica um pouco abaixo do traço (cerca de 2% nas aberturas). Em 2025 só há aberturas.
+Abertas acima do eixo e fechadas abaixo, de 2010 a 2026 (jan–set), com o número de empresas abertas sobre cada barra. Até 2018 só existe o total do Mapa de Empresas (cinza). De 2019 em diante, as barras mostram MEI, ME e EPP empilhados (Sebrae), e um traço preto marca o total do Mapa de Empresas no mesmo ano. Como as fontes têm metodologias diferentes, a soma dos portes fica um pouco abaixo do traço (cerca de 2% nas aberturas). Em 2025 só há aberturas; 2026 é parcial (janeiro a setembro) e aparece com contorno tracejado no relatório e hachurado na imagem.
 
 ## Todas as empresas
 
@@ -45,6 +45,7 @@ Cada porte na sua própria escala, para ver a tendência dos menores, que no gr�
 |---|---|---|---|
 | `sebrae_2019_2024` | Sebrae Nacional, *Relatório Técnico: Análise de Abertura e Fechamento de Empresas por Setor e CNAE no Brasil* (16/05/2025) | Apêndice, Tabela A.1, p. 35 | Cartão CNPJ da Receita Federal, extraído em 07/04/2025 |
 | `sebrae_aberturas_2025` | Sebrae Nacional, *Resumo Executivo: Abertura de Pequenos Negócios – Anual 2025* (13/01/2026) | Seção "Análise de 2025", p. 5 | Cartão CNPJ da Receita Federal, extraído em 07/01/2026 |
+| `sebrae_aberturas_2026_set` | Levantamento do Sebrae divulgado em 07/10/2026 (via Portal Contábeis) | Acumulado jan–set/2026 e percentuais por porte | Cartão CNPJ da Receita Federal |
 | `mapa_2020` a `mapa_2024` | Mapa de Empresas (Governo Federal), boletins do 3º quadrimestre de cada ano | Totais anuais, linha "GERAL" (em 2024, Tabela 27) | Juntas comerciais e Receita Federal (Redesim) |
 
 Links:
@@ -98,6 +99,7 @@ A base descompactada ocupa dezenas de GB, por isso o processamento roda na sua m
 ## Limitações
 
 - **2025 está incompleto**: só as aberturas por porte foram publicadas até out/2026. Os fechamentos de 2025 por porte ainda não foram divulgados em relatório, por isso não há barra de fechadas nem saldo em 2025. Eles podem ser obtidos pelo painel de fechamento do DataSebrae ou calculados com `empresas_porte.receita` (veja "Fontes primárias").
+- **2026 é parcial e o porte é estimado**: o Sebrae divulgou o total exato de pequenos negócios abertos de janeiro a setembro de 2026 (4.391.539) e só os percentuais por porte (77% MEI, 19% ME, 4% EPP). Os valores por porte no CSV aplicam esses percentuais ao total e estão marcados com `abertas_aproximado = true` e `periodo = jan-set`. Não compare a barra de 2026 com anos completos sem considerar que faltam três meses.
 - **MEI 2025 é aproximado**: o relatório traz "cerca de 3,81 milhões"; o CSV marca essa linha com `abertas_aproximado = true`.
 - **2025 vem de outra extração da base** (jan/2026, contra abr/2025 da série 2019–2024). Os números de anos anteriores podem mudar um pouco entre extrações, porque baixas e reclassificações são registradas com atraso. Por isso 2025 aparece hachurado no gráfico.
 - Os dois gráficos usam fontes diferentes e **não devem ser somados nem subtraídos**: o Mapa de Empresas inclui todos os portes e outras naturezas jurídicas, e conta as baixas de outra forma.
